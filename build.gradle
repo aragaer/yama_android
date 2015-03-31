@@ -1,0 +1,83 @@
+// vim: et ts=4 sts=4 sw=4 syntax=groovy
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.13.2'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files('libs/dropbox-sync-sdk-android.jar')
+    compile files("$buildDir/native-libs/native-libs.jar")
+}
+
+android {
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['res']
+        }
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+    compileSdkVersion 'android-21'
+    buildToolsVersion '22.0.1'
+
+    signingConfigs {
+        release {
+            storeFile file(".")
+            storePassword ''
+            keyAlias ''
+            keyPassword ''
+        }
+    }
+
+    buildTypes {
+        debug {
+        }
+        release {
+            runProguard true
+            proguardFile 'proguard.cfg'
+            signingConfig signingConfigs.release
+            zipAlign true
+        }
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(':assembleRelease')) {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+        def store_file = file(properties.getProperty('key.file'))
+        def store_pass = System.console().readPassword("\nPlease enter store passphrase: ")
+        def key_alias = properties.getProperty('key.alias')
+        def key_pass = System.console().readPassword("\nPlease enter key passphrase: ")
+
+        android.signingConfigs.release.storeFile = store_file
+        android.signingConfigs.release.storePassword = new String(store_pass)
+        android.signingConfigs.release.keyAlias = new String(key_alias)
+        android.signingConfigs.release.keyPassword = new String(key_pass)
+    }
+}
+
+task nativeLibsToJar(type: Zip) {
+    destinationDir file("$buildDir/native-libs")
+    baseName 'native-libs'
+    extension 'jar'
+    from fileTree(dir: 'libs', include: '**/*.so')
+    into 'lib/'
+}
+ 
+tasks.withType(JavaCompile) {
+    compileTask -> compileTask.dependsOn(nativeLibsToJar)
+}

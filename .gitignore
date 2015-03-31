@@ -1,0 +1,7 @@
+local.properties
+*~
+gradlew
+gradlew.bat
+.gradle/
+gradle/
+build/

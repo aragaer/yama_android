@@ -6,18 +6,19 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import static android.view.WindowManager.LayoutParams.*;
 
-public class MainActivity extends Activity {
+
+public class ClickMeActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
 	TextView view = new TextView(this);
-	view.setText("Hello, world");
+	view.setText("Are we locked now?");
 
 	setContentView(view);
 
-	IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-	getApplicationContext().registerReceiver(new ScreenOnReceiver(), filter);
+	getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED);
     }
 }

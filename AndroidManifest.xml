@@ -5,10 +5,18 @@
    <uses-sdk
       android:minSdkVersion="16"
       android:targetSdkVersion="21" />
-   <application android:label="hello" >
+   <application android:label="Yama" >
        <activity
            android:name=".MainActivity"
-           android:label="hello" >
+           android:label="create memo" >
+           <intent-filter>
+               <action android:name="android.intent.action.MAIN" />
+               <category android:name="android.intent.category.LAUNCHER"/>
+           </intent-filter>
+       </activity>
+       <activity
+           android:name=".ListActivity"
+           android:label="list memos" >
            <intent-filter>
                <action android:name="android.intent.action.MAIN" />
                <category android:name="android.intent.category.LAUNCHER"/>

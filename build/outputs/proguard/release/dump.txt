@@ -1,0 +1,719 @@
+_____________________________________________________________________
++ Program class: com/aragaer/yama/ListActivity
+  Superclass:    android/app/Activity
+  Major version: 0x32
+  Minor version: 0x0
+    = target 1.6
+  Access flags:  0x21
+    = public class com.aragaer.yama.ListActivity extends android.app.Activity
+
+Interfaces (count = 0):
+
+Constant Pool (count = 84):
+  + Integer [17367043]
+  + String [Error reading memos]
+  + String [YAMA]
+  + String [memo]
+  + Class [android/app/Activity]
+  + Class [android/util/Log]
+  + Class [android/widget/ArrayAdapter]
+  + Class [android/widget/ListView]
+  + Class [com/aragaer/yama/ListActivity]
+  + Class [java/io/BufferedReader]
+  + Class [java/io/InputStream]
+  + Class [java/io/InputStreamReader]
+  + Class [java/lang/Exception]
+  + Fieldref [com/aragaer/yama/ListActivity.a Landroid/widget/ListView;]
+  + Fieldref [com/aragaer/yama/ListActivity.b Landroid/widget/ArrayAdapter;]
+  + Methodref [android/app/Activity.<init> ()V]
+  + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+  + Methodref [android/util/Log.e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+  + Methodref [android/widget/ArrayAdapter.<init> (Landroid/content/Context;I)V]
+  + Methodref [android/widget/ArrayAdapter.add (Ljava/lang/Object;)V]
+  + Methodref [android/widget/ListView.<init> (Landroid/content/Context;)V]
+  + Methodref [android/widget/ListView.setAdapter (Landroid/widget/ListAdapter;)V]
+  + Methodref [com/aragaer/yama/ListActivity.a ()V]
+  + Methodref [com/aragaer/yama/ListActivity.openFileInput (Ljava/lang/String;)Ljava/io/FileInputStream;]
+  + Methodref [com/aragaer/yama/ListActivity.setContentView (Landroid/view/View;)V]
+  + Methodref [java/io/BufferedReader.<init> (Ljava/io/Reader;)V]
+  + Methodref [java/io/BufferedReader.readLine ()Ljava/lang/String;]
+  + Methodref [java/io/InputStream.close ()V]
+  + Methodref [java/io/InputStreamReader.<init> (Ljava/io/InputStream;)V]
+  + NameAndType [<init> ()V]
+  + NameAndType [<init> (Landroid/content/Context;)V]
+  + NameAndType [<init> (Landroid/content/Context;I)V]
+  + NameAndType [<init> (Ljava/io/InputStream;)V]
+  + NameAndType [<init> (Ljava/io/Reader;)V]
+  + NameAndType [a ()V]
+  + NameAndType [a Landroid/widget/ListView;]
+  + NameAndType [add (Ljava/lang/Object;)V]
+  + NameAndType [b Landroid/widget/ArrayAdapter;]
+  + NameAndType [close ()V]
+  + NameAndType [e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+  + NameAndType [onCreate (Landroid/os/Bundle;)V]
+  + NameAndType [openFileInput (Ljava/lang/String;)Ljava/io/FileInputStream;]
+  + NameAndType [readLine ()Ljava/lang/String;]
+  + NameAndType [setAdapter (Landroid/widget/ListAdapter;)V]
+  + NameAndType [setContentView (Landroid/view/View;)V]
+  + Utf8 [()Ljava/lang/String;]
+  + Utf8 [()V]
+  + Utf8 [(Landroid/content/Context;)V]
+  + Utf8 [(Landroid/content/Context;I)V]
+  + Utf8 [(Landroid/os/Bundle;)V]
+  + Utf8 [(Landroid/view/View;)V]
+  + Utf8 [(Landroid/widget/ListAdapter;)V]
+  + Utf8 [(Ljava/io/InputStream;)V]
+  + Utf8 [(Ljava/io/Reader;)V]
+  + Utf8 [(Ljava/lang/Object;)V]
+  + Utf8 [(Ljava/lang/String;)Ljava/io/FileInputStream;]
+  + Utf8 [(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [Error reading memos]
+  + Utf8 [Landroid/widget/ArrayAdapter;]
+  + Utf8 [Landroid/widget/ListView;]
+  + Utf8 [YAMA]
+  + Utf8 [a]
+  + Utf8 [add]
+  + Utf8 [android/app/Activity]
+  + Utf8 [android/util/Log]
+  + Utf8 [android/widget/ArrayAdapter]
+  + Utf8 [android/widget/ListView]
+  + Utf8 [b]
+  + Utf8 [close]
+  + Utf8 [com/aragaer/yama/ListActivity]
+  + Utf8 [e]
+  + Utf8 [java/io/BufferedReader]
+  + Utf8 [java/io/InputStream]
+  + Utf8 [java/io/InputStreamReader]
+  + Utf8 [java/lang/Exception]
+  + Utf8 [memo]
+  + Utf8 [onCreate]
+  + Utf8 [openFileInput]
+  + Utf8 [readLine]
+  + Utf8 [setAdapter]
+  + Utf8 [setContentView]
+
+Fields (count = 2):
+  + Field:        a Landroid/widget/ListView;
+    Access flags: 0x2
+      = private android.widget.ListView a
+  + Field:        b Landroid/widget/ArrayAdapter;
+    Access flags: 0x2
+      = private android.widget.ArrayAdapter b
+
+Methods (count = 3):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public ListActivity()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
+      [0] aload_0 v0
+      [1] invokespecial #16
+        + Methodref [android/app/Activity.<init> ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onCreate(Landroid/os/Bundle;)V
+    Access flags: 0x1
+      = public void onCreate(android.os.Bundle)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 55, locals = 2, stack = 5):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] invokespecial #17
+        + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+      [5] aload_0 v0
+      [6] new #7
+        + Class [android/widget/ArrayAdapter]
+      [9] dup
+      [10] aload_0 v0
+      [11] ldc #1
+        + Integer [17367043]
+      [13] invokespecial #19
+        + Methodref [android/widget/ArrayAdapter.<init> (Landroid/content/Context;I)V]
+      [16] putfield #15
+        + Fieldref [com/aragaer/yama/ListActivity.b Landroid/widget/ArrayAdapter;]
+      [19] aload_0 v0
+      [20] new #8
+        + Class [android/widget/ListView]
+      [23] dup
+      [24] aload_0 v0
+      [25] invokespecial #21
+        + Methodref [android/widget/ListView.<init> (Landroid/content/Context;)V]
+      [28] putfield #14
+        + Fieldref [com/aragaer/yama/ListActivity.a Landroid/widget/ListView;]
+      [31] aload_0 v0
+      [32] getfield #14
+        + Fieldref [com/aragaer/yama/ListActivity.a Landroid/widget/ListView;]
+      [35] aload_0 v0
+      [36] getfield #15
+        + Fieldref [com/aragaer/yama/ListActivity.b Landroid/widget/ArrayAdapter;]
+      [39] invokevirtual #22
+        + Methodref [android/widget/ListView.setAdapter (Landroid/widget/ListAdapter;)V]
+      [42] aload_0 v0
+      [43] invokespecial #23
+        + Methodref [com/aragaer/yama/ListActivity.a ()V]
+      [46] aload_0 v0
+      [47] aload_0 v0
+      [48] getfield #14
+        + Fieldref [com/aragaer/yama/ListActivity.a Landroid/widget/ListView;]
+      [51] invokevirtual #25
+        + Methodref [com/aragaer/yama/ListActivity.setContentView (Landroid/view/View;)V]
+      [54] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       a()V
+    Access flags: 0x2
+      = private void a()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 59, locals = 4, stack = 5):
+      [0] aload_0 v0
+      [1] ldc #4
+        + String [memo]
+      [3] invokevirtual #24
+        + Methodref [com/aragaer/yama/ListActivity.openFileInput (Ljava/lang/String;)Ljava/io/FileInputStream;]
+      [6] astore_1 v1
+      [7] new #10
+        + Class [java/io/BufferedReader]
+      [10] dup
+      [11] new #12
+        + Class [java/io/InputStreamReader]
+      [14] dup
+      [15] aload_1 v1
+      [16] invokespecial #29
+        + Methodref [java/io/InputStreamReader.<init> (Ljava/io/InputStream;)V]
+      [19] invokespecial #26
+        + Methodref [java/io/BufferedReader.<init> (Ljava/io/Reader;)V]
+      [22] astore_2 v2
+      [23] aload_2 v2
+      [24] invokevirtual #27
+        + Methodref [java/io/BufferedReader.readLine ()Ljava/lang/String;]
+      [27] dup
+      [28] astore_3 v3
+      [29] ifnull +14 (target=43)
+      [32] aload_0 v0
+      [33] getfield #15
+        + Fieldref [com/aragaer/yama/ListActivity.b Landroid/widget/ArrayAdapter;]
+      [36] aload_3 v3
+      [37] invokevirtual #20
+        + Methodref [android/widget/ArrayAdapter.add (Ljava/lang/Object;)V]
+      [40] goto -17 (target=23)
+      [43] aload_1 v1
+      [44] invokevirtual #28
+        + Methodref [java/io/InputStream.close ()V]
+      [47] return
+      [48] astore_1 v1
+      [49] ldc #3
+        + String [YAMA]
+      [51] ldc #2
+        + String [Error reading memos]
+      [53] aload_1 v1
+      [54] invokestatic #18
+        + Methodref [android/util/Log.e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+      [57] pop
+      [58] return
+      Code attribute exceptions (count = 1):
+      - ExceptionInfo (0 -> 47: 48):
+      + Class [java/lang/Exception]
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/aragaer/yama/MainActivity
+  Superclass:    android/app/Activity
+  Major version: 0x32
+  Minor version: 0x0
+    = target 1.6
+  Access flags:  0x21
+    = public class com.aragaer.yama.MainActivity extends android.app.Activity
+
+Interfaces (count = 0):
+
+Constant Pool (count = 124):
+  + Integer [32768]
+  + String [
+]
+  + String [Cancel]
+  + String [Done]
+  + String [Error writing memo]
+  + String [YAMA]
+  + String [memo]
+  + Class [android/app/Activity]
+  + Class [android/util/Log]
+  + Class [android/view/Menu]
+  + Class [android/view/MenuItem]
+  + Class [android/widget/EditText]
+  + Class [com/aragaer/yama/MainActivity]
+  + Class [com/aragaer/yama/a]
+  + Class [com/aragaer/yama/b]
+  + Class [java/io/OutputStream]
+  + Class [java/lang/Exception]
+  + Class [java/lang/Object]
+  + Class [java/lang/String]
+  + Fieldref [com/aragaer/yama/MainActivity.a Landroid/widget/EditText;]
+  + Fieldref [com/aragaer/yama/MainActivity.b Landroid/view/MenuItem$OnMenuItemClickListener;]
+  + Fieldref [com/aragaer/yama/MainActivity.c Landroid/view/MenuItem$OnMenuItemClickListener;]
+  + Methodref [android/app/Activity.<init> ()V]
+  + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+  + Methodref [android/util/Log.e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+  + Methodref [android/widget/EditText.<init> (Landroid/content/Context;)V]
+  + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+  + Methodref [android/widget/EditText.setGravity (I)V]
+  + Methodref [com/aragaer/yama/MainActivity.openFileOutput (Ljava/lang/String;I)Ljava/io/FileOutputStream;]
+  + Methodref [com/aragaer/yama/MainActivity.setContentView (Landroid/view/View;)V]
+  + Methodref [com/aragaer/yama/a.<init> (Lcom/aragaer/yama/MainActivity;)V]
+  + Methodref [com/aragaer/yama/b.<init> (Lcom/aragaer/yama/MainActivity;)V]
+  + Methodref [java/io/OutputStream.close ()V]
+  + Methodref [java/io/OutputStream.write ([B)V]
+  + Methodref [java/lang/Object.toString ()Ljava/lang/String;]
+  + Methodref [java/lang/String.getBytes ()[B]
+  + Methodref [java/lang/String.isEmpty ()Z]
+  + Methodref [java/lang/String.split (Ljava/lang/String;)[Ljava/lang/String;]
+  + Methodref [java/lang/String.trim ()Ljava/lang/String;]
+  + InterfaceMethodref [android/view/Menu.add (Ljava/lang/CharSequence;)Landroid/view/MenuItem;]
+  + InterfaceMethodref [android/view/MenuItem.setOnMenuItemClickListener (Landroid/view/MenuItem$OnMenuItemClickListener;)Landroid/view/MenuItem;]
+  + InterfaceMethodref [android/view/MenuItem.setShowAsAction (I)V]
+  + NameAndType [<init> ()V]
+  + NameAndType [<init> (Landroid/content/Context;)V]
+  + NameAndType [<init> (Lcom/aragaer/yama/MainActivity;)V]
+  + NameAndType [a Landroid/widget/EditText;]
+  + NameAndType [add (Ljava/lang/CharSequence;)Landroid/view/MenuItem;]
+  + NameAndType [b Landroid/view/MenuItem$OnMenuItemClickListener;]
+  + NameAndType [c Landroid/view/MenuItem$OnMenuItemClickListener;]
+  + NameAndType [close ()V]
+  + NameAndType [e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+  + NameAndType [getBytes ()[B]
+  + NameAndType [getText ()Landroid/text/Editable;]
+  + NameAndType [isEmpty ()Z]
+  + NameAndType [onCreate (Landroid/os/Bundle;)V]
+  + NameAndType [openFileOutput (Ljava/lang/String;I)Ljava/io/FileOutputStream;]
+  + NameAndType [setContentView (Landroid/view/View;)V]
+  + NameAndType [setGravity (I)V]
+  + NameAndType [setOnMenuItemClickListener (Landroid/view/MenuItem$OnMenuItemClickListener;)Landroid/view/MenuItem;]
+  + NameAndType [setShowAsAction (I)V]
+  + NameAndType [split (Ljava/lang/String;)[Ljava/lang/String;]
+  + NameAndType [toString ()Ljava/lang/String;]
+  + NameAndType [trim ()Ljava/lang/String;]
+  + NameAndType [write ([B)V]
+  + Utf8 [
+]
+  + Utf8 [()Landroid/text/Editable;]
+  + Utf8 [()Ljava/lang/String;]
+  + Utf8 [()V]
+  + Utf8 [()Z]
+  + Utf8 [()[B]
+  + Utf8 [(I)V]
+  + Utf8 [(Landroid/content/Context;)V]
+  + Utf8 [(Landroid/os/Bundle;)V]
+  + Utf8 [(Landroid/view/Menu;)Z]
+  + Utf8 [(Landroid/view/MenuItem$OnMenuItemClickListener;)Landroid/view/MenuItem;]
+  + Utf8 [(Landroid/view/View;)V]
+  + Utf8 [(Lcom/aragaer/yama/MainActivity;)V]
+  + Utf8 [(Ljava/lang/CharSequence;)Landroid/view/MenuItem;]
+  + Utf8 [(Ljava/lang/String;)[Ljava/lang/String;]
+  + Utf8 [(Ljava/lang/String;I)Ljava/io/FileOutputStream;]
+  + Utf8 [(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+  + Utf8 [([B)V]
+  + Utf8 [<init>]
+  + Utf8 [Cancel]
+  + Utf8 [Code]
+  + Utf8 [Done]
+  + Utf8 [Error writing memo]
+  + Utf8 [Landroid/view/MenuItem$OnMenuItemClickListener;]
+  + Utf8 [Landroid/widget/EditText;]
+  + Utf8 [YAMA]
+  + Utf8 [a]
+  + Utf8 [add]
+  + Utf8 [android/app/Activity]
+  + Utf8 [android/util/Log]
+  + Utf8 [android/view/Menu]
+  + Utf8 [android/view/MenuItem]
+  + Utf8 [android/widget/EditText]
+  + Utf8 [b]
+  + Utf8 [c]
+  + Utf8 [close]
+  + Utf8 [com/aragaer/yama/MainActivity]
+  + Utf8 [com/aragaer/yama/a]
+  + Utf8 [com/aragaer/yama/b]
+  + Utf8 [e]
+  + Utf8 [getBytes]
+  + Utf8 [getText]
+  + Utf8 [isEmpty]
+  + Utf8 [java/io/OutputStream]
+  + Utf8 [java/lang/Exception]
+  + Utf8 [java/lang/Object]
+  + Utf8 [java/lang/String]
+  + Utf8 [memo]
+  + Utf8 [onCreate]
+  + Utf8 [onCreateOptionsMenu]
+  + Utf8 [openFileOutput]
+  + Utf8 [setContentView]
+  + Utf8 [setGravity]
+  + Utf8 [setOnMenuItemClickListener]
+  + Utf8 [setShowAsAction]
+  + Utf8 [split]
+  + Utf8 [toString]
+  + Utf8 [trim]
+  + Utf8 [write]
+
+Fields (count = 3):
+  + Field:        a Landroid/widget/EditText;
+    Access flags: 0x2
+      = private android.widget.EditText a
+  + Field:        b Landroid/view/MenuItem$OnMenuItemClickListener;
+    Access flags: 0x2
+      = private android.view.MenuItem$OnMenuItemClickListener b
+  + Field:        c Landroid/view/MenuItem$OnMenuItemClickListener;
+    Access flags: 0x2
+      = private android.view.MenuItem$OnMenuItemClickListener c
+
+Methods (count = 4):
+  - Method:       <init>()V
+    Access flags: 0x1
+      = public MainActivity()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 29, locals = 1, stack = 4):
+      [0] aload_0 v0
+      [1] invokespecial #23
+        + Methodref [android/app/Activity.<init> ()V]
+      [4] aload_0 v0
+      [5] new #14
+        + Class [com/aragaer/yama/a]
+      [8] dup
+      [9] aload_0 v0
+      [10] invokespecial #31
+        + Methodref [com/aragaer/yama/a.<init> (Lcom/aragaer/yama/MainActivity;)V]
+      [13] putfield #21
+        + Fieldref [com/aragaer/yama/MainActivity.b Landroid/view/MenuItem$OnMenuItemClickListener;]
+      [16] aload_0 v0
+      [17] new #15
+        + Class [com/aragaer/yama/b]
+      [20] dup
+      [21] aload_0 v0
+      [22] invokespecial #32
+        + Methodref [com/aragaer/yama/b.<init> (Lcom/aragaer/yama/MainActivity;)V]
+      [25] putfield #22
+        + Fieldref [com/aragaer/yama/MainActivity.c Landroid/view/MenuItem$OnMenuItemClickListener;]
+      [28] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onCreate(Landroid/os/Bundle;)V
+    Access flags: 0x1
+      = public void onCreate(android.os.Bundle)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 35, locals = 2, stack = 4):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] invokespecial #24
+        + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
+      [5] aload_0 v0
+      [6] new #12
+        + Class [android/widget/EditText]
+      [9] dup
+      [10] aload_0 v0
+      [11] invokespecial #26
+        + Methodref [android/widget/EditText.<init> (Landroid/content/Context;)V]
+      [14] putfield #20
+        + Fieldref [com/aragaer/yama/MainActivity.a Landroid/widget/EditText;]
+      [17] aload_0 v0
+      [18] getfield #20
+        + Fieldref [com/aragaer/yama/MainActivity.a Landroid/widget/EditText;]
+      [21] bipush 48
+      [23] invokevirtual #28
+        + Methodref [android/widget/EditText.setGravity (I)V]
+      [26] aload_0 v0
+      [27] aload_0 v0
+      [28] getfield #20
+        + Fieldref [com/aragaer/yama/MainActivity.a Landroid/widget/EditText;]
+      [31] invokevirtual #30
+        + Methodref [com/aragaer/yama/MainActivity.setContentView (Landroid/view/View;)V]
+      [34] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onCreateOptionsMenu(Landroid/view/Menu;)Z
+    Access flags: 0x1
+      = public boolean onCreateOptionsMenu(android.view.Menu)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 56, locals = 3, stack = 2):
+      [0] aload_1 v1
+      [1] ldc #4
+        + String [Done]
+      [3] invokeinterface #40, 512
+        + InterfaceMethodref [android/view/Menu.add (Ljava/lang/CharSequence;)Landroid/view/MenuItem;]
+      [8] astore_2 v2
+      [9] aload_1 v1
+      [10] ldc #3
+        + String [Cancel]
+      [12] invokeinterface #40, 512
+        + InterfaceMethodref [android/view/Menu.add (Ljava/lang/CharSequence;)Landroid/view/MenuItem;]
+      [17] astore_1 v1
+      [18] aload_2 v2
+      [19] iconst_2
+      [20] invokeinterface #42, 512
+        + InterfaceMethodref [android/view/MenuItem.setShowAsAction (I)V]
+      [25] aload_2 v2
+      [26] aload_0 v0
+      [27] getfield #22
+        + Fieldref [com/aragaer/yama/MainActivity.c Landroid/view/MenuItem$OnMenuItemClickListener;]
+      [30] invokeinterface #41, 512
+        + InterfaceMethodref [android/view/MenuItem.setOnMenuItemClickListener (Landroid/view/MenuItem$OnMenuItemClickListener;)Landroid/view/MenuItem;]
+      [35] pop
+      [36] aload_1 v1
+      [37] iconst_2
+      [38] invokeinterface #42, 512
+        + InterfaceMethodref [android/view/MenuItem.setShowAsAction (I)V]
+      [43] aload_1 v1
+      [44] aload_0 v0
+      [45] getfield #21
+        + Fieldref [com/aragaer/yama/MainActivity.b Landroid/view/MenuItem$OnMenuItemClickListener;]
+      [48] invokeinterface #41, 512
+        + InterfaceMethodref [android/view/MenuItem.setOnMenuItemClickListener (Landroid/view/MenuItem$OnMenuItemClickListener;)Landroid/view/MenuItem;]
+      [53] pop
+      [54] iconst_1
+      [55] ireturn
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       a(Lcom/aragaer/yama/MainActivity;)V
+    Access flags: 0x1008
+      = static synthetic void a(com.aragaer.yama.MainActivity)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 94, locals = 5, stack = 3):
+      [0] aload_0 v0
+      [1] dup
+      [2] astore_0 v0
+      [3] getfield #20
+        + Fieldref [com/aragaer/yama/MainActivity.a Landroid/widget/EditText;]
+      [6] invokevirtual #27
+        + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+      [9] invokevirtual #35
+        + Methodref [java/lang/Object.toString ()Ljava/lang/String;]
+      [12] ldc #2
+        + String [
+]
+      [14] invokevirtual #38
+        + Methodref [java/lang/String.split (Ljava/lang/String;)[Ljava/lang/String;]
+      [17] astore_1 v1
+      [18] aload_0 v0
+      [19] ldc #7
+        + String [memo]
+      [21] ldc #1
+        + Integer [32768]
+      [23] invokevirtual #29
+        + Methodref [com/aragaer/yama/MainActivity.openFileOutput (Ljava/lang/String;I)Ljava/io/FileOutputStream;]
+      [26] astore_0 v0
+      [27] aload_1 v1
+      [28] dup
+      [29] astore_1 v1
+      [30] arraylength
+      [31] istore_2 v2
+      [32] iconst_0
+      [33] istore_3 v3
+      [34] iload_3 v3
+      [35] iload_2 v2
+      [36] ificmpge +42 (target=78)
+      [39] aload_1 v1
+      [40] iload_3 v3
+      [41] aaload
+      [42] invokevirtual #39
+        + Methodref [java/lang/String.trim ()Ljava/lang/String;]
+      [45] dup
+      [46] astore v4
+      [48] invokevirtual #37
+        + Methodref [java/lang/String.isEmpty ()Z]
+      [51] ifne +21 (target=72)
+      [54] aload_0 v0
+      [55] aload v4
+      [57] invokevirtual #36
+        + Methodref [java/lang/String.getBytes ()[B]
+      [60] invokevirtual #34
+        + Methodref [java/io/OutputStream.write ([B)V]
+      [63] aload_0 v0
+      [64] ldc #2
+        + String [
+]
+      [66] invokevirtual #36
+        + Methodref [java/lang/String.getBytes ()[B]
+      [69] invokevirtual #34
+        + Methodref [java/io/OutputStream.write ([B)V]
+      [72] iinc v3, 1
+      [75] goto -41 (target=34)
+      [78] aload_0 v0
+      [79] invokevirtual #33
+        + Methodref [java/io/OutputStream.close ()V]
+      [82] return
+      [83] astore_0 v0
+      [84] ldc #6
+        + String [YAMA]
+      [86] ldc #5
+        + String [Error writing memo]
+      [88] aload_0 v0
+      [89] invokestatic #25
+        + Methodref [android/util/Log.e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I]
+      [92] pop
+      [93] return
+      Code attribute exceptions (count = 1):
+      - ExceptionInfo (18 -> 82: 83):
+      + Class [java/lang/Exception]
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/aragaer/yama/a
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+    = target 1.6
+  Access flags:  0x30
+    = final class com.aragaer.yama.a extends java.lang.Object
+
+Interfaces (count = 1):
+  + Class [android/view/MenuItem$OnMenuItemClickListener]
+
+Constant Pool (count = 24):
+  + Class [android/view/MenuItem$OnMenuItemClickListener]
+  + Class [com/aragaer/yama/MainActivity]
+  + Class [com/aragaer/yama/a]
+  + Class [java/lang/Object]
+  + Fieldref [com/aragaer/yama/a.a Lcom/aragaer/yama/MainActivity;]
+  + Methodref [com/aragaer/yama/MainActivity.finish ()V]
+  + Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + NameAndType [a Lcom/aragaer/yama/MainActivity;]
+  + NameAndType [finish ()V]
+  + Utf8 [()V]
+  + Utf8 [(Landroid/view/MenuItem;)Z]
+  + Utf8 [(Lcom/aragaer/yama/MainActivity;)V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [Lcom/aragaer/yama/MainActivity;]
+  + Utf8 [a]
+  + Utf8 [android/view/MenuItem$OnMenuItemClickListener]
+  + Utf8 [com/aragaer/yama/MainActivity]
+  + Utf8 [com/aragaer/yama/a]
+  + Utf8 [finish]
+  + Utf8 [java/lang/Object]
+  + Utf8 [onMenuItemClick]
+
+Fields (count = 1):
+  + Field:        a Lcom/aragaer/yama/MainActivity;
+    Access flags: 0x1002
+      = private synthetic com.aragaer.yama.MainActivity a
+
+Methods (count = 2):
+  - Method:       <init>(Lcom/aragaer/yama/MainActivity;)V
+    Access flags: 0x0
+      = a(com.aragaer.yama.MainActivity)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 10, locals = 2, stack = 2):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] putfield #5
+        + Fieldref [com/aragaer/yama/a.a Lcom/aragaer/yama/MainActivity;]
+      [5] aload_0 v0
+      [6] invokespecial #7
+        + Methodref [java/lang/Object.<init> ()V]
+      [9] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onMenuItemClick(Landroid/view/MenuItem;)Z
+    Access flags: 0x11
+      = public final boolean onMenuItemClick(android.view.MenuItem)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 9, locals = 2, stack = 1):
+      [0] aload_0 v0
+      [1] getfield #5
+        + Fieldref [com/aragaer/yama/a.a Lcom/aragaer/yama/MainActivity;]
+      [4] invokevirtual #6
+        + Methodref [com/aragaer/yama/MainActivity.finish ()V]
+      [7] iconst_1
+      [8] ireturn
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+
+_____________________________________________________________________
++ Program class: com/aragaer/yama/b
+  Superclass:    java/lang/Object
+  Major version: 0x32
+  Minor version: 0x0
+    = target 1.6
+  Access flags:  0x30
+    = final class com.aragaer.yama.b extends java.lang.Object
+
+Interfaces (count = 1):
+  + Class [android/view/MenuItem$OnMenuItemClickListener]
+
+Constant Pool (count = 26):
+  + Class [android/view/MenuItem$OnMenuItemClickListener]
+  + Class [com/aragaer/yama/MainActivity]
+  + Class [com/aragaer/yama/b]
+  + Class [java/lang/Object]
+  + Fieldref [com/aragaer/yama/b.a Lcom/aragaer/yama/MainActivity;]
+  + Methodref [com/aragaer/yama/MainActivity.a (Lcom/aragaer/yama/MainActivity;)V]
+  + Methodref [com/aragaer/yama/MainActivity.finish ()V]
+  + Methodref [java/lang/Object.<init> ()V]
+  + NameAndType [<init> ()V]
+  + NameAndType [a (Lcom/aragaer/yama/MainActivity;)V]
+  + NameAndType [a Lcom/aragaer/yama/MainActivity;]
+  + NameAndType [finish ()V]
+  + Utf8 [()V]
+  + Utf8 [(Landroid/view/MenuItem;)Z]
+  + Utf8 [(Lcom/aragaer/yama/MainActivity;)V]
+  + Utf8 [<init>]
+  + Utf8 [Code]
+  + Utf8 [Lcom/aragaer/yama/MainActivity;]
+  + Utf8 [a]
+  + Utf8 [android/view/MenuItem$OnMenuItemClickListener]
+  + Utf8 [com/aragaer/yama/MainActivity]
+  + Utf8 [com/aragaer/yama/b]
+  + Utf8 [finish]
+  + Utf8 [java/lang/Object]
+  + Utf8 [onMenuItemClick]
+
+Fields (count = 1):
+  + Field:        a Lcom/aragaer/yama/MainActivity;
+    Access flags: 0x1002
+      = private synthetic com.aragaer.yama.MainActivity a
+
+Methods (count = 2):
+  - Method:       <init>(Lcom/aragaer/yama/MainActivity;)V
+    Access flags: 0x0
+      = b(com.aragaer.yama.MainActivity)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 10, locals = 2, stack = 2):
+      [0] aload_0 v0
+      [1] aload_1 v1
+      [2] putfield #5
+        + Fieldref [com/aragaer/yama/b.a Lcom/aragaer/yama/MainActivity;]
+      [5] aload_0 v0
+      [6] invokespecial #8
+        + Methodref [java/lang/Object.<init> ()V]
+      [9] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onMenuItemClick(Landroid/view/MenuItem;)Z
+    Access flags: 0x11
+      = public final boolean onMenuItemClick(android.view.MenuItem)
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 16, locals = 2, stack = 1):
+      [0] aload_0 v0
+      [1] getfield #5
+        + Fieldref [com/aragaer/yama/b.a Lcom/aragaer/yama/MainActivity;]
+      [4] invokestatic #6
+        + Methodref [com/aragaer/yama/MainActivity.a (Lcom/aragaer/yama/MainActivity;)V]
+      [7] aload_0 v0
+      [8] getfield #5
+        + Fieldref [com/aragaer/yama/b.a Lcom/aragaer/yama/MainActivity;]
+      [11] invokevirtual #7
+        + Methodref [com/aragaer/yama/MainActivity.finish ()V]
+      [14] iconst_1
+      [15] ireturn
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+
+Class file attributes (count = 0):
+

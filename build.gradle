@@ -15,8 +15,10 @@ repositories {
 }
 
 dependencies {
-    compile files('libs/dropbox-sync-sdk-android.jar')
-    compile files("$buildDir/native-libs/native-libs.jar")
+    androidTestCompile 'junit:junit:4.11'
+    androidTestCompile 'org.hamcrest:hamcrest-integration:1.3'
+    androidTestCompile 'org.hamcrest:hamcrest-core:1.3'
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
 android {
@@ -28,6 +30,10 @@ android {
         }
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+
+        androidTest {
+            setRoot('src/test')
+        }
     }
     compileSdkVersion 'android-21'
     buildToolsVersion '22.0.1'
@@ -70,14 +76,6 @@ gradle.taskGraph.whenReady { taskGraph ->
     }
 }
 
-task nativeLibsToJar(type: Zip) {
-    destinationDir file("$buildDir/native-libs")
-    baseName 'native-libs'
-    extension 'jar'
-    from fileTree(dir: 'libs', include: '**/*.so')
-    into 'lib/'
-}
- 
-tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn(nativeLibsToJar)
+tasks.withType(Test) {
+    testLogging.exceptionFormat = 'full'
 }

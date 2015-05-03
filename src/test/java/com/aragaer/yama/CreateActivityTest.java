@@ -22,8 +22,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @LargeTest
 public class CreateActivityTest {
 
-    @Rule public ActivityTestRule<MainActivity> mActivityRule =
-	    new ActivityTestRule<MainActivity>(MainActivity.class);
+    @Rule public ActivityTestRule<MemoCreateActivity> mActivityRule =
+	    new ActivityTestRule<MemoCreateActivity>(MemoCreateActivity.class);
 
     private List<String> readMemosFile() throws Exception {
 	List<String> result = new LinkedList<String>();

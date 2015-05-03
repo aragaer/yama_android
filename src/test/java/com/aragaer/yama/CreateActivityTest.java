@@ -53,65 +53,24 @@ public class CreateActivityTest {
 	mActivityRule.getActivity().deleteFile("memo");
     }
 
-    @Test public void shouldWriteOneLineMemosToFile() throws Exception {
-	onView(supportsInputMethods()).perform(typeText("Have a cup of Espresso."));
-	onView(withText("Done")).perform(click());
-
-	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Have a cup of Espresso.")));
-    }
-
-    @Test public void shouldWriteMultiLineMemosToFile() throws Exception {
-	onView(supportsInputMethods())
-	    .perform(typeText("Have a cup of Espresso.\n"
-			      +"Write a second test."));
-	onView(withText("Done")).perform(click());
-
-	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Have a cup of Espresso.",
-					 "Write a second test.")));
-    }
-
-    @Test public void shouldDiscardEmptyLines() throws Exception {
-	onView(supportsInputMethods())
-	    .perform(typeText("\n"
-			      +"Have a cup of Espresso.\n"
-			      +"\n"
-			      +"  \n"
-			      +"\n"
-			      +"Write a second test.\n"
-			      +"\n"));
-	onView(withText("Done")).perform(click());
-
-	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Have a cup of Espresso.",
-					 "Write a second test.")));
-    }
-
-    @Test public void shouldTrimStrings() throws Exception {
-	onView(supportsInputMethods())
-	    .perform(typeText("  Have a cup of Espresso.   \n"
-			      +"\n"
-			      +"  \n"
-			      +"  Write a second test.\n"
-			      +"\n"));
-	onView(withText("Done")).perform(click());
-
-	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Have a cup of Espresso.",
-					 "Write a second test.")));
-    }
-
-    @Test public void shouldAppendToExistingMemos() throws Exception {
+    @Test public void shouldAppendTrimmedMemosToFile() throws Exception {
 	writeMemosFile(Arrays.asList("Some initial memo", "Two of them"));
 
-	onView(supportsInputMethods()).perform(typeText("Have a cup of Espresso."));
+	onView(supportsInputMethods())
+	    .perform(typeText("\n"
+			      +"  Have a cup of Espresso.  \n"
+			      +"\n"
+			      +"  \n"
+			      +"\n"
+			      +"Write a second test.  \n"
+			      +"\n"));
 	onView(withText("Done")).perform(click());
 
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Some initial memo",
 					 "Two of them",
-					 "Have a cup of Espresso.")));
+					 "Have a cup of Espresso.",
+					 "Write a second test.")));
     }
 
     @Test public void shouldDiscardIfNotSaved() throws Exception {

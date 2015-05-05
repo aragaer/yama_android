@@ -29,7 +29,7 @@ public class ListActivity extends Activity {
 	    }
 	};
 
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
 	memoList = Collections.synchronizedList(new ArrayList<String>());
@@ -40,6 +40,11 @@ public class ListActivity extends Activity {
 	readMemos();
 
 	setContentView(memoListView);
+    }
+
+    protected void onStart() {
+	super.onStart();
+	memoListView.setSelection(memoAdapter.getCount() - 1);
     }
 
     private void readMemos() {

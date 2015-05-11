@@ -46,15 +46,11 @@ public class MemoListActivity extends Activity {
     protected void onResume() {
 	super.onResume();
 	readMemos();
-    }
-
-    protected void onStart() {
-	super.onStart();
 	memoListView.setSelection(memoAdapter.getCount() - 1);
-	Log.d("YAMA", "started");
     }
 
     private void readMemos() {
+	memoList.clear();
 	try {
 	    InputStream memos = openFileInput("memo");
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(memos));
@@ -93,6 +89,7 @@ public class MemoListActivity extends Activity {
 	    for (String line : memoList) {
 		file.write(line.getBytes());
 		file.write("\n".getBytes());
+		Log.d("YAMA", "Writing from list: " + line);
 	    }
 	    file.close();
 	} catch (Exception e) {

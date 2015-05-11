@@ -18,6 +18,7 @@ public class MemoFile {
 		    continue;
 		file.write(trimmed.getBytes());
 		file.write("\n".getBytes());
+		Log.d("YAMA", "Write: " + trimmed);
 	    }
 	    file.close();
 	} catch (Exception e) {

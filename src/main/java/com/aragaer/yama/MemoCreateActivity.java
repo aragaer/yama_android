@@ -29,6 +29,11 @@ public class MemoCreateActivity extends Activity {
 	    }
 	};
 
+    @Override public void onBackPressed() {
+	saveMemo();
+	finish();
+    }
+
     private void saveMemo() {
 	MemoFile.write(this, memo.getText().toString().split("\n"));
     }

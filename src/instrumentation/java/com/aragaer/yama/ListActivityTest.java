@@ -42,6 +42,20 @@ public class ListActivityTest {
 	file.close();
     }
 
+    private List<String> readMemosFile() throws Exception {
+	List<String> result = new LinkedList<String>();
+	InputStream file = mActivityRule.getActivity().openFileInput("memo");
+	BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+	while (true) {
+	    String line = reader.readLine();
+	    if (line == null)
+		break;
+	    result.add(line);
+	}
+	file.close();
+	return result;
+    }
+
     @Before public void setUp() {
 	try {
 	    mActivityRule.getActivity().deleteFile("memo");
@@ -62,9 +76,17 @@ public class ListActivityTest {
 	checkOneMemo("Two of them", 1);
     }
 
-    @Test public void canCreateNewMemo() {
+    @Test public void canCreateNewMemo() throws Exception {
 	onView(withId(R.id.new_memo_btn)).perform(click());
 	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.new_memo_edit)).perform(typeText("A memo"));
+	android.support.test.espresso.Espresso.closeSoftKeyboard();
+	android.support.test.espresso.Espresso.pressBack();
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("Some initial memo",
+					 "Two of them",
+					 "A memo")));
+	checkOneMemo("A memo", 2);
     }
 
     private void checkOneMemo(String text, int position) {

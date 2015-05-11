@@ -49,6 +49,10 @@ public class CreateActivityTest {
 	file.close();
     }
 
+    @Before public void setUp() {
+	mActivityRule.getActivity().deleteFile("memo");
+    }
+
     @After public void tearDown() {
 	mActivityRule.getActivity().deleteFile("memo");
     }

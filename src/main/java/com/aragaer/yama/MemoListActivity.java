@@ -13,7 +13,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 
-public class ListActivity extends Activity {
+public class MemoListActivity extends Activity {
 
     ListView memoListView;
     ArrayAdapter<String> memoAdapter;
@@ -23,7 +23,7 @@ public class ListActivity extends Activity {
     OnItemClickListener clickListener = new OnItemClickListener() {
 	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Log.d("YAMA", "There's a click on memo " + memoAdapter.getItem(position));
-		Intent intent = new Intent(ListActivity.this, EditActivity.class);
+		Intent intent = new Intent(MemoListActivity.this, EditActivity.class);
 		intent.putExtra("memo", memoAdapter.getItem(position));
 		startActivityForResult(intent, position);
 	    }
@@ -31,20 +31,27 @@ public class ListActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	setContentView(R.layout.list);
 
 	memoList = Collections.synchronizedList(new ArrayList<String>());
 	memoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, memoList);
-	memoListView = new ListView(this);
+	memoListView = (ListView) findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(clickListener);
-	readMemos();
 
-	setContentView(memoListView);
+	Log.d("YAMA", "launched");
+    }
+
+    protected void onResume() {
+	super.onResume();
+	readMemos();
+	Log.d("YAMA", "resumed");
     }
 
     protected void onStart() {
 	super.onStart();
 	memoListView.setSelection(memoAdapter.getCount() - 1);
+	Log.d("YAMA", "started");
     }
 
     private void readMemos() {
@@ -56,6 +63,7 @@ public class ListActivity extends Activity {
 		if (line == null)
 		    break;
 		memoList.add(line);
+		Log.d("YAMA", "Got line: " + line);
 	    }
 	    memos.close();
 	} catch (Exception e) {

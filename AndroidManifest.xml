@@ -16,7 +16,7 @@
 	   </intent-filter>
        </activity>
        <activity
-	   android:name=".ListActivity"
+	   android:name=".MemoListActivity"
 	   android:icon="@drawable/ic_launcher"
 	   android:label="list memos" >
 	   <intent-filter>

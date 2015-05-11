@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -38,14 +41,11 @@ public class MemoListActivity extends Activity {
 	memoListView = (ListView) findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(clickListener);
-
-	Log.d("YAMA", "launched");
     }
 
     protected void onResume() {
 	super.onResume();
 	readMemos();
-	Log.d("YAMA", "resumed");
     }
 
     protected void onStart() {
@@ -98,5 +98,22 @@ public class MemoListActivity extends Activity {
 	} catch (Exception e) {
 	    Log.e("YAMA", "Error writing memo", e);
 	}
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.new_memo_btn:
+	    Intent intent = new Intent(this, MemoCreateActivity.class);
+	    startActivity(intent);
+	    return true;
+	default:
+	    return false;
+	}
+    }
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+	MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.list_menu, menu);
+	return true;
     }
 }

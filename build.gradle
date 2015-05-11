@@ -19,6 +19,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.1'
     testCompile 'org.robolectric:robolectric:2.4'
+    testCompile 'com.android.support:support-v4:22.1.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.1'
 }
 

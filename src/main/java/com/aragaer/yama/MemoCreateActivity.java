@@ -2,7 +2,6 @@ package com.aragaer.yama;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -14,11 +13,8 @@ public class MemoCreateActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-
-	memo = new EditText(this);
-	memo.setGravity(Gravity.TOP);
-
-	setContentView(memo);
+	setContentView(R.layout.create);
+	memo = (EditText) findViewById(R.id.new_memo_edit);
     }
 
     private static final int SAVE_BUTTON_ID = 0;

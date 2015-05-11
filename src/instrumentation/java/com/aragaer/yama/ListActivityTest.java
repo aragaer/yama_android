@@ -62,6 +62,11 @@ public class ListActivityTest {
 	checkOneMemo("Two of them", 1);
     }
 
+    @Test public void canCreateNewMemo() {
+	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
+    }
+
     private void checkOneMemo(String text, int position) {
 	onData(anything())
 	    .inAdapterView(withId(R.id.memo_list))

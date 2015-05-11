@@ -12,9 +12,13 @@ apply plugin: 'android'
 
 repositories {
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-core:1.1'
+    testCompile 'org.robolectric:robolectric:2.4'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.1'
 }
 
@@ -29,6 +33,7 @@ android {
         release.setRoot('build-types/release')
 
         androidTest.setRoot('src/instrumentation')
+        test.setRoot('src/test')
     }
 
     defaultConfig {

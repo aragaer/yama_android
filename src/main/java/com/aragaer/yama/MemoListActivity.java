@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 
-public class ListActivity extends Activity {
+public class MemoListActivity extends Activity {
 
     ListView memoListView;
     ArrayAdapter<String> memoAdapter;
@@ -23,26 +26,31 @@ public class ListActivity extends Activity {
     OnItemClickListener clickListener = new OnItemClickListener() {
 	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Log.d("YAMA", "There's a click on memo " + memoAdapter.getItem(position));
-		Intent intent = new Intent(ListActivity.this, EditActivity.class);
+		Intent intent = new Intent(MemoListActivity.this, EditActivity.class);
 		intent.putExtra("memo", memoAdapter.getItem(position));
 		startActivityForResult(intent, position);
 	    }
 	};
 
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	setContentView(R.layout.list);
 
 	memoList = Collections.synchronizedList(new ArrayList<String>());
 	memoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, memoList);
-	memoListView = new ListView(this);
+	memoListView = (ListView) findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(clickListener);
-	readMemos();
+    }
 
-	setContentView(memoListView);
+    protected void onResume() {
+	super.onResume();
+	readMemos();
+	memoListView.setSelection(memoAdapter.getCount() - 1);
     }
 
     private void readMemos() {
+	memoList.clear();
 	try {
 	    InputStream memos = openFileInput("memo");
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(memos));
@@ -51,6 +59,7 @@ public class ListActivity extends Activity {
 		if (line == null)
 		    break;
 		memoList.add(line);
+		Log.d("YAMA", "Got line: " + line);
 	    }
 	    memos.close();
 	} catch (Exception e) {
@@ -80,10 +89,28 @@ public class ListActivity extends Activity {
 	    for (String line : memoList) {
 		file.write(line.getBytes());
 		file.write("\n".getBytes());
+		Log.d("YAMA", "Writing from list: " + line);
 	    }
 	    file.close();
 	} catch (Exception e) {
 	    Log.e("YAMA", "Error writing memo", e);
 	}
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.new_memo_btn:
+	    Intent intent = new Intent(this, MemoCreateActivity.class);
+	    startActivity(intent);
+	    return true;
+	default:
+	    return false;
+	}
+    }
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+	MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.list_menu, menu);
+	return true;
     }
 }

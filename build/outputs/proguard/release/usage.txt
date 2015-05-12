@@ -1,4 +1,0 @@
-com.aragaer.yama.BuildConfig
-com.aragaer.yama.R
-com.aragaer.yama.R$attr
-com.aragaer.yama.R$drawable

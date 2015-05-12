@@ -1,0 +1,13 @@
+com.aragaer.yama.BuildConfig
+com.aragaer.yama.MemoCreateActivity:
+    private static final int SAVE_BUTTON_ID
+    private static final int DISCARD_BUTTON_ID
+com.aragaer.yama.MemoFile:
+    9:9:public MemoFile()
+com.aragaer.yama.R
+com.aragaer.yama.R$attr
+com.aragaer.yama.R$drawable
+com.aragaer.yama.R$id
+com.aragaer.yama.R$layout
+com.aragaer.yama.R$menu
+com.aragaer.yama.R$string

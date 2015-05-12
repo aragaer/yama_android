@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
    package="com.aragaer.yama"
-   android:versionCode="2"
-   android:versionName="0.1" >
+   android:versionCode="3"
+   android:versionName="0.2" >
    <uses-sdk
-      android:minSdkVersion="16"
+      android:minSdkVersion="14"
       android:targetSdkVersion="21" />
    <application android:label="Yama" android:icon="@drawable/ic_launcher">
        <activity
-	   android:name=".MainActivity"
+	   android:name=".MemoCreateActivity"
 	   android:icon="@drawable/ic_launcher"
 	   android:label="create memo" >
 	   <intent-filter>
@@ -16,7 +16,7 @@
 	   </intent-filter>
        </activity>
        <activity
-	   android:name=".ListActivity"
+	   android:name=".MemoListActivity"
 	   android:icon="@drawable/ic_launcher"
 	   android:label="list memos" >
 	   <intent-filter>

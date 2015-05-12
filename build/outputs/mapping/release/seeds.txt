@@ -1,0 +1,6 @@
+com.aragaer.yama.EditActivity
+com.aragaer.yama.EditActivity: EditActivity()
+com.aragaer.yama.MemoCreateActivity
+com.aragaer.yama.MemoCreateActivity: MemoCreateActivity()
+com.aragaer.yama.MemoListActivity
+com.aragaer.yama.MemoListActivity: MemoListActivity()

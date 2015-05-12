@@ -1,6 +1,0 @@
-com.aragaer.yama.EditActivity
-com.aragaer.yama.EditActivity: EditActivity()
-com.aragaer.yama.ListActivity
-com.aragaer.yama.ListActivity: ListActivity()
-com.aragaer.yama.MainActivity
-com.aragaer.yama.MainActivity: MainActivity()

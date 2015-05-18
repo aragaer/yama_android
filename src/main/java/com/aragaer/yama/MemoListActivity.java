@@ -41,6 +41,7 @@ public class MemoListActivity extends Activity {
 	memoListView = (ListView) findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(clickListener);
+	startService(new Intent(this, OverlayService.class));
     }
 
     protected void onResume() {

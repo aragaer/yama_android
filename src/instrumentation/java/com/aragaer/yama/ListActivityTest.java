@@ -79,14 +79,38 @@ public class ListActivityTest {
     @Test public void canCreateNewMemo() throws Exception {
 	onView(withId(R.id.new_memo_btn)).perform(click());
 	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
-	onView(withId(R.id.new_memo_edit)).perform(typeText("A memo"));
+	onView(withId(R.id.new_memo_edit))
+	    .perform(typeText("\n"
+			      +"  Have a cup of Espresso.  \n"
+			      +"\n"
+			      +"  \n"
+			      +"\n"
+			      +"Write a second test.  \n"
+			      +"\n"));
+
 	android.support.test.espresso.Espresso.closeSoftKeyboard();
 	android.support.test.espresso.Espresso.pressBack();
+
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Some initial memo",
 					 "Two of them",
-					 "A memo")));
-	checkOneMemo("A memo", 2);
+					 "Have a cup of Espresso.",
+					 "Write a second test.")));
+	checkOneMemo("Have a cup of Espresso.", 2);
+	checkOneMemo("Write a second test.", 3);
+    }
+
+    @Test public void discardsNewMemoIfCancelled() throws Exception {
+	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.new_memo_edit))
+	    .perform(typeText("  Have a cup of Espresso.  \n"));
+
+	onView(withText("Cancel")).perform(click());
+
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("Some initial memo",
+					 "Two of them")));
     }
 
     private void checkOneMemo(String text, int position) {

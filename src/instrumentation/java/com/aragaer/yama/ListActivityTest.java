@@ -91,13 +91,13 @@ public class ListActivityTest {
 	android.support.test.espresso.Espresso.closeSoftKeyboard();
 	android.support.test.espresso.Espresso.pressBack();
 
+	checkOneMemo("Have a cup of Espresso.", 2);
+	checkOneMemo("Write a second test.", 3);
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Some initial memo",
 					 "Two of them",
 					 "Have a cup of Espresso.",
 					 "Write a second test.")));
-	checkOneMemo("Have a cup of Espresso.", 2);
-	checkOneMemo("Write a second test.", 3);
     }
 
     @Test public void discardsNewMemoIfCancelled() throws Exception {
@@ -113,6 +113,51 @@ public class ListActivityTest {
 					 "Two of them")));
     }
 
+    @Test public void editMemo() throws Exception {
+	clickFirstItem();
+	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.memo_edit))
+	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
+	onView(withText("Done")).perform(click());
+	checkOneMemo("This is a new memo.", 0);
+	checkOneMemo("And one more.", 1);
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("This is a new memo.",
+					 "And one more.",
+					 "Two of them")));
+    }
+
+    @Test public void cancelEdit() throws Exception {
+	clickFirstItem();
+	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.memo_edit))
+	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
+	onView(withText("Cancel")).perform(click());
+	checkOneMemo("Some initial memo", 0);
+	checkOneMemo("Two of them", 1);
+
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("Some initial memo",
+					 "Two of them")));
+    }
+
+    @Test public void deleteMemo() throws Exception {
+	clickFirstItem();
+	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withText("Delete")).perform(click());
+	checkOneMemo("Two of them", 0);
+
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("Two of them")));
+    }
+
+    private void clickFirstItem() {
+	onData(anything())
+	    .inAdapterView(withId(R.id.memo_list))
+	    .atPosition(0)
+	    .perform(click());
+    }
+    
     private void checkOneMemo(String text, int position) {
 	onData(anything())
 	    .inAdapterView(withId(R.id.memo_list))

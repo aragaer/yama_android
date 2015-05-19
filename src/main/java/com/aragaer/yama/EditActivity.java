@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -20,11 +19,8 @@ public class EditActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
-	memo = new EditText(this);
-	memo.setText(getIntent().getStringExtra("memo"));
-	memo.setGravity(Gravity.TOP);
-
-	setContentView(memo);
+	setContentView(R.layout.edit);
+	memo = (EditText) findViewById(R.id.memo_edit);
     }
 
     MenuItem.OnMenuItemClickListener cancelListener = new MenuItem.OnMenuItemClickListener() {

@@ -1,6 +1,9 @@
 package com.aragaer.yama;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +27,21 @@ public class MemoCreateActivity extends Activity {
 	    public boolean onMenuItemClick(MenuItem item) {
 		if (item.getItemId() == SAVE_BUTTON_ID)
 		    MemoCreateActivity.this.saveMemo();
-		MemoCreateActivity.this.finish();
+		MemoCreateActivity.this.exitToList();
 		return true;
 	    }
 	};
 
     @Override public void onBackPressed() {
 	saveMemo();
+	exitToList();
+    }
+
+    private void exitToList() {
 	finish();
+	KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+	if (!km.inKeyguardRestrictedInputMode())
+	    startActivity(new Intent(this, MemoListActivity.class));
     }
 
     private void saveMemo() {

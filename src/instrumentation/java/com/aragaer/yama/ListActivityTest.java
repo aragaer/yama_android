@@ -141,6 +141,24 @@ public class ListActivityTest {
 					 "Two of them")));
     }
 
+    @Test public void backSavesEdit() throws Exception {
+	clickFirstItem();
+	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.memo_edit))
+	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
+
+	android.support.test.espresso.Espresso.closeSoftKeyboard();
+	android.support.test.espresso.Espresso.pressBack();
+
+	checkMemos("This is a new memo.",
+		   "And one more.",
+		   "Two of them");
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("This is a new memo.",
+					 "And one more.",
+					 "Two of them")));
+    }
+
     @Test public void deleteMemo() throws Exception {
 	clickFirstItem();
 	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
@@ -163,5 +181,10 @@ public class ListActivityTest {
 	    .inAdapterView(withId(R.id.memo_list))
 	    .atPosition(position)
 	    .check(matches(withText(text)));
+    }
+
+    private void checkMemos(String... lines) {
+	for (int i = 0; i < lines.length; i++)
+	    checkOneMemo(lines[i], i);
     }
 }

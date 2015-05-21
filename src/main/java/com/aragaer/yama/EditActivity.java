@@ -52,6 +52,11 @@ public class EditActivity extends Activity {
 	setResult(RESULT_OK, result);
     }
 
+    @Override public void onBackPressed() {
+	saveMemo(memo.getText().toString());
+	finish();
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
 	MenuItem done = menu.add("Done");
 	MenuItem cancel = menu.add("Cancel");

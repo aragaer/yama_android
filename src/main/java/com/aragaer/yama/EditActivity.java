@@ -22,6 +22,7 @@ public class EditActivity extends Activity {
 
 	setContentView(R.layout.edit);
 	memo = (EditText) findViewById(R.id.memo_edit);
+	memo.setText(getIntent().getStringExtra("memo"));
     }
 
     MenuItem.OnMenuItemClickListener cancelListener = new MenuItem.OnMenuItemClickListener() {

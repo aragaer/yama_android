@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class EditActivity extends Activity {
@@ -49,6 +50,7 @@ public class EditActivity extends Activity {
 
     private void saveMemo(String memo) {
 	Intent result = new Intent().putExtra("edited", memo);
+	Toast.makeText(this, memo.isEmpty() ? "Deleted" : "Saved", Toast.LENGTH_SHORT).show();
 	setResult(RESULT_OK, result);
     }
 

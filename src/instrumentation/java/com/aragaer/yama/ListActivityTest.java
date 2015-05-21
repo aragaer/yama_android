@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -91,8 +92,14 @@ public class ListActivityTest {
 	android.support.test.espresso.Espresso.closeSoftKeyboard();
 	android.support.test.espresso.Espresso.pressBack();
 
-	checkOneMemo("Have a cup of Espresso.", 2);
-	checkOneMemo("Write a second test.", 3);
+	onView(withText("Saved"))
+	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+	    .check(matches(isDisplayed()));
+
+	checkMemos("Some initial memo",
+		   "Two of them",
+		   "Have a cup of Espresso.",
+		   "Write a second test.");
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Some initial memo",
 					 "Two of them",
@@ -119,6 +126,11 @@ public class ListActivityTest {
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
 	onView(withText("Done")).perform(click());
+
+	onView(withText("Saved"))
+	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+	    .check(matches(isDisplayed()));
+
 	checkOneMemo("This is a new memo.", 0);
 	checkOneMemo("And one more.", 1);
 	assertThat(readMemosFile(),
@@ -164,6 +176,10 @@ public class ListActivityTest {
 	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
 	onView(withText("Delete")).perform(click());
 	checkOneMemo("Two of them", 0);
+
+	onView(withText("Deleted"))
+	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+	    .check(matches(isDisplayed()));
 
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Two of them")));

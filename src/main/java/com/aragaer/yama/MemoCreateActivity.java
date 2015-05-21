@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class MemoCreateActivity extends Activity {
@@ -46,6 +47,7 @@ public class MemoCreateActivity extends Activity {
 
     private void saveMemo() {
 	MemoFile.write(this, memo.getText().toString().split("\n"));
+	Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
     }
 
     private void createMenuItem(Menu menu, int itemId, int resId) {

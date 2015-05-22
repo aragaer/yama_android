@@ -123,6 +123,7 @@ public class ListActivityTest {
     @Test public void editMemo() throws Exception {
 	clickFirstItem();
 	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
 	onView(withText("Done")).perform(click());
@@ -156,6 +157,7 @@ public class ListActivityTest {
     @Test public void backSavesEdit() throws Exception {
 	clickFirstItem();
 	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
 
@@ -174,6 +176,7 @@ public class ListActivityTest {
     @Test public void deleteMemo() throws Exception {
 	clickFirstItem();
 	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
+	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withText("Delete")).perform(click());
 	checkOneMemo("Two of them", 0);
 
@@ -185,13 +188,64 @@ public class ListActivityTest {
 		   equalTo(Arrays.asList("Two of them")));
     }
 
+    @Test public void scrollToEnd() throws Exception {
+	String text = "p\n";
+	for (int i = 0; i < 50; i++)
+	    text += "x\n";
+	text += "y";
+	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_edit))
+	    .perform(replaceText(text));
+	onView(withText(R.string.action_save)).perform(click());
+
+	onView(withText("y")).check(matches(isDisplayed()));
+    }
+
+    @Test public void showEdited() throws Exception {
+	String text = "";
+	for (int i = 0; i < 20; i++)
+	    text += "x\n";
+	text += "y\n";
+	for (int i = 0; i < 20; i++)
+	    text += "x\n";
+	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_edit))
+	    .perform(replaceText(text));
+	onView(withText(R.string.action_save)).perform(click());
+
+	onData(allOf(is(instanceOf(String.class)), is("y")))
+	    .inAdapterView(withId(R.id.memo_list))
+	    .perform(click());
+
+	onView(withId(R.id.memo_edit)).perform(replaceText("z"));
+	onView(withText(R.string.action_save)).perform(click());
+
+	onView(withText("z")).check(matches(isDisplayed()));
+    }
+
+    @Test public void scrollToEndOnStart() throws Exception {
+	String text = "";
+	for (int i = 0; i < 50; i++)
+	    text += "x\n";
+	text += "y";
+	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_edit))
+	    .perform(replaceText(text));
+	mActivityRule.getActivity().finish(); // force restart of main activity
+	onView(withText(R.string.action_save)).perform(click());
+
+	onData(allOf(is(instanceOf(String.class)), is("y")))
+	    .inAdapterView(withId(R.id.memo_list))
+	    .check(matches(isDisplayed()));
+    }
+
     private void clickFirstItem() {
 	onData(anything())
 	    .inAdapterView(withId(R.id.memo_list))
 	    .atPosition(0)
 	    .perform(click());
     }
-    
+
     private void checkOneMemo(String text, int position) {
 	onData(anything())
 	    .inAdapterView(withId(R.id.memo_list))

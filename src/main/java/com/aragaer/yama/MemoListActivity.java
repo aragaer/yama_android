@@ -21,6 +21,7 @@ public class MemoListActivity extends Activity {
     ListView memoListView;
     ArrayAdapter<String> memoAdapter;
     List<String> memoList;
+    int scrollPosition = -1;
 
 
     OnItemClickListener clickListener = new OnItemClickListener() {
@@ -46,7 +47,8 @@ public class MemoListActivity extends Activity {
     protected void onResume() {
 	super.onResume();
 	readMemos();
-	memoListView.setSelection(memoAdapter.getCount() - 1);
+	if (scrollPosition == -1)
+	    memoListView.setSelection(memoAdapter.getCount() - 1);
     }
 
     private void readMemos() {
@@ -79,6 +81,7 @@ public class MemoListActivity extends Activity {
 		continue;
 	    memoList.add(position++, new_line);
 	}
+	scrollPosition = position - 1;
 	runOnUiThread(new Runnable() {
 		public void run() {
 		    memoAdapter.notifyDataSetChanged();

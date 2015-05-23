@@ -5,7 +5,9 @@
    <uses-sdk
       android:minSdkVersion="14"
       android:targetSdkVersion="21" />
-   <application android:label="Yama" android:icon="@drawable/ic_launcher">
+   <application android:label="Yama"
+		android:icon="@drawable/ic_launcher"
+		android:theme="@android:style/Theme.Holo.Light">
        <activity
 	   android:name=".MemoCreateActivity"
 	   android:icon="@drawable/ic_launcher"

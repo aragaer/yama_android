@@ -20,50 +20,49 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 
-public class MemoListFragment extends Fragment {
+public class MemoListFragment extends Fragment implements OnItemClickListener {
 
     ListView memoListView;
     ArrayAdapter<String> memoAdapter;
     List<String> memoList;
-    int scrollPosition = -1;
+    int scrollTo = -1;
 
-    OnItemClickListener clickListener = new OnItemClickListener() {
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Log.d("YAMA", "There's a click on memo " + memoAdapter.getItem(position));
-		Intent intent = new Intent(getActivity(), EditActivity.class);
-		intent.putExtra("memo", memoAdapter.getItem(position));
-		getActivity().startActivityForResult(intent, position);
-	    }
-	};
+    MemoListFragment() {
+	memoList = Collections.synchronizedList(new ArrayList<String>());
+    }
+
+    List<String> getList() {
+	return memoList;
+    }
+
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	((MemoListActivity) getActivity()).openEditor(memoAdapter.getItem(position), position);
+    }
 
     @Override public View onCreateView(LayoutInflater inflater,
 				       ViewGroup root,
 				       Bundle savedInstanceState) {
 	View result = inflater.inflate(R.layout.list, root, false);
 
-	memoList = Collections.synchronizedList(new ArrayList<String>());
 	memoAdapter = new ArrayAdapter<String>(getActivity(),
 					       android.R.layout.simple_list_item_1,
 					       memoList);
 	memoListView = (ListView) result.findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
-	memoListView.setOnItemClickListener(clickListener);
+	memoListView.setOnItemClickListener(this);
 	setHasOptionsMenu(true);
 	return result;
     }
 
-    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	inflater.inflate(R.menu.list_menu, menu);
+    @Override public void onResume(){
+	super.onResume();
+	if (scrollTo == -1)
+	    memoListView.setSelection(memoAdapter.getCount() - 1);
+	else
+	    memoListView.setSelection(scrollTo);
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-	switch (item.getItemId()) {
-	case R.id.new_memo_btn:
-	    Intent intent = new Intent(getActivity(), MemoCreateActivity.class);
-	    getActivity().startActivity(intent);
-	    return true;
-	default:
-	    return false;
-	}
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	inflater.inflate(R.menu.list_menu, menu);
     }
 }

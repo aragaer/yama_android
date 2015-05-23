@@ -1,81 +1,103 @@
 package com.aragaer.yama;
 
-import java.io.*;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class MemoListActivity extends Activity {
 
-    private MemoListFragment fragment;
+    private List<String> memoList;
+    private MemoListFragment listFragment;
+    private EditFragment editFragment;
+    private int editPosition = -1;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
-	fragment = new MemoListFragment();
+	listFragment = new MemoListFragment();
+	memoList = listFragment.getList();
 	getFragmentManager()
 	    .beginTransaction()
-	    .add(android.R.id.content, fragment)
+	    .add(android.R.id.content, listFragment)
 	    .commit();
     }
 
     protected void onResume() {
 	super.onResume();
-	readMemos();
-	if (fragment.scrollPosition == -1)
-	    fragment.memoListView.setSelection(fragment.memoAdapter.getCount() - 1);
+	MemoFile.read(this, memoList);
     }
 
-    private void readMemos() {
-	fragment.memoList.clear();
-	try {
-	    InputStream memos = openFileInput("memo");
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(memos));
-	    while (true) {
-		String line = reader.readLine();
-		if (line == null)
-		    break;
-		fragment.memoList.add(line);
-		Log.d("YAMA", "Got line: " + line);
-	    }
-	    memos.close();
-	} catch (Exception e) {
-	    Log.e("YAMA", "Error reading memos", e);
-	}
+    void openEditor(String text, int position) {
+	editFragment = new EditFragment();
+	editFragment.setMemo(text);
+	getFragmentManager()
+	    .beginTransaction()
+	    .replace(android.R.id.content, editFragment)
+	    .addToBackStack(null)
+	    .commit();
+	editPosition = position;
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-	if (resultCode != RESULT_OK)
-	    return;
-	int position = requestCode;
-	String edited = result.getStringExtra("edited");
-	fragment.memoList.remove(position);
-	for (String new_line : edited.split("\n")) {
-	    new_line = new_line.trim();
-	    if (new_line.isEmpty())
-		continue;
-	    fragment.memoList.add(position++, new_line);
-	}
-	fragment.scrollPosition = position - 1;
-	runOnUiThread(new Runnable() {
-		public void run() {
-		    fragment.memoAdapter.notifyDataSetChanged();
-		}
-	    });
-	try {
-	    OutputStream file = openFileOutput("memo", Context.MODE_PRIVATE);
-	    for (String line : fragment.memoList) {
-		file.write(line.getBytes());
-		file.write("\n".getBytes());
-		Log.d("YAMA", "Writing from list: " + line);
-	    }
-	    file.close();
-	} catch (Exception e) {
-	    Log.e("YAMA", "Error writing memo", e);
+    @Override public void onBackPressed() {
+	if (editFragment != null)
+	    finalizeEdit();
+	else
+	    super.onBackPressed();
+    }
+
+    private void createNew() {
+	startActivity(new Intent(this, MemoCreateActivity.class));
+    }
+
+    private void closeEditor() {
+	getFragmentManager().popBackStack();
+	editFragment = null;
+    }
+
+    private void finalizeEdit() {
+	saveMemo(editFragment.getMemo());
+	MemoFile.save(this, memoList);
+	closeEditor();
+    }
+
+    private void saveMemo(String string) {
+	List<String> created = MemoFile.sanitize(string.split("\n"));
+	listFragment.scrollTo = editPosition + created.size() - 1;
+	deleteMemo();
+	memoList.addAll(editPosition, created);
+	Toast.makeText(this, created.size() == 0 ? "Deleted" : "Saved", Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteMemo() {
+	memoList.remove(editPosition);
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.new_memo_btn:
+	    createNew();
+	    return true;
+	case R.id.edit_done_btn:
+	    finalizeEdit();
+	    return true;
+	case R.id.edit_cancel_btn:
+	    closeEditor();
+	    return true;
+	case R.id.edit_delete_btn:
+	    deleteMemo();
+	    MemoFile.save(this, memoList);
+	    Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+	    closeEditor();
+	    return true;
+	default:
+	    return false;
 	}
     }
 }

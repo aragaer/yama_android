@@ -73,8 +73,7 @@ public class ListActivityTest {
     }
 
     @Test public void shouldDisplayMemos() {
-	checkOneMemo("Some initial memo", 0);
-	checkOneMemo("Two of them", 1);
+	checkMemos("Some initial memo", "Two of them");
     }
 
     @Test public void canCreateNewMemo() throws Exception {
@@ -92,14 +91,13 @@ public class ListActivityTest {
 	android.support.test.espresso.Espresso.closeSoftKeyboard();
 	android.support.test.espresso.Espresso.pressBack();
 
-	onView(withText("Saved"))
-	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
-	    .check(matches(isDisplayed()));
-
 	checkMemos("Some initial memo",
 		   "Two of them",
 		   "Have a cup of Espresso.",
 		   "Write a second test.");
+
+	checkToast("Saved");
+
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Some initial memo",
 					 "Two of them",
@@ -128,9 +126,7 @@ public class ListActivityTest {
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
 	onView(withText("Done")).perform(click());
 
-	onView(withText("Saved"))
-	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
-	    .check(matches(isDisplayed()));
+	checkToast("Saved");
 
 	checkOneMemo("This is a new memo.", 0);
 	checkOneMemo("And one more.", 1);
@@ -156,7 +152,6 @@ public class ListActivityTest {
 
     @Test public void backSavesEdit() throws Exception {
 	clickFirstItem();
-	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
 	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
@@ -173,9 +168,22 @@ public class ListActivityTest {
 					 "Two of them")));
     }
 
+    @Test public void eraseMemo() throws Exception {
+	clickFirstItem();
+	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
+	onView(withId(R.id.memo_edit))
+	    .perform(replaceText("\n \n\n   \n\n"));
+	onView(withText("Done")).perform(click());
+
+	checkToast("Deleted");
+	checkMemos("Two of them");
+
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("Two of them")));
+    }
+
     @Test public void deleteMemo() throws Exception {
 	clickFirstItem();
-	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
 	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withText("Delete")).perform(click());
 	checkOneMemo("Two of them", 0);
@@ -256,5 +264,11 @@ public class ListActivityTest {
     private void checkMemos(String... lines) {
 	for (int i = 0; i < lines.length; i++)
 	    checkOneMemo(lines[i], i);
+    }
+
+    private void checkToast(String toast) {
+	onView(withText(toast))
+	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+	    .check(matches(isDisplayed()));
     }
 }

@@ -87,16 +87,15 @@ public class ListActivityTest {
 			      +"\n"
 			      +"Write a second test.  \n"
 			      +"\n"));
-
 	android.support.test.espresso.Espresso.closeSoftKeyboard();
 	android.support.test.espresso.Espresso.pressBack();
 
+	onView(withId(R.id.memo_list)).check(matches(isDisplayed()));
+	checkToast("Saved");
 	checkMemos("Some initial memo",
 		   "Two of them",
 		   "Have a cup of Espresso.",
 		   "Write a second test.");
-
-	checkToast("Saved");
 
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("Some initial memo",

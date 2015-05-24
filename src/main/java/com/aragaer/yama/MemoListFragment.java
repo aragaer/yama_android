@@ -20,14 +20,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 
-class MemoListFragment extends Fragment implements OnItemClickListener {
+public class MemoListFragment extends Fragment implements OnItemClickListener {
 
     ListView memoListView;
     ArrayAdapter<String> memoAdapter;
     List<String> memoList;
     int scrollTo = -1;
 
-    MemoListFragment() {
+    public MemoListFragment() {
 	memoList = Collections.synchronizedList(new ArrayList<String>());
 	setHasOptionsMenu(true);
     }

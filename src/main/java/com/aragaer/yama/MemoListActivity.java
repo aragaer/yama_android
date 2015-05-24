@@ -1,116 +1,116 @@
 package com.aragaer.yama;
 
-import java.io.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 
 public class MemoListActivity extends Activity {
 
-    ListView memoListView;
-    ArrayAdapter<String> memoAdapter;
-    List<String> memoList;
+    private List<String> memoList;
+    private MemoListFragment listFragment;
+    private int editPosition = -1;
+    private Editor editor;
 
-
-    OnItemClickListener clickListener = new OnItemClickListener() {
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Log.d("YAMA", "There's a click on memo " + memoAdapter.getItem(position));
-		Intent intent = new Intent(MemoListActivity.this, EditActivity.class);
-		intent.putExtra("memo", memoAdapter.getItem(position));
-		startActivityForResult(intent, position);
-	    }
-	};
-
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.list);
 
-	memoList = Collections.synchronizedList(new ArrayList<String>());
-	memoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, memoList);
-	memoListView = (ListView) findViewById(R.id.memo_list);
-	memoListView.setAdapter(memoAdapter);
-	memoListView.setOnItemClickListener(clickListener);
+	editor = new Editor();
+
+	listFragment = new MemoListFragment();
+	memoList = listFragment.getList();
+	getFragmentManager()
+	    .beginTransaction()
+	    .add(android.R.id.content, listFragment)
+	    .commit();
     }
 
     protected void onResume() {
 	super.onResume();
-	readMemos();
-	memoListView.setSelection(memoAdapter.getCount() - 1);
+	MemoFile.read(this, memoList);
     }
 
-    private void readMemos() {
-	memoList.clear();
-	try {
-	    InputStream memos = openFileInput("memo");
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(memos));
-	    while (true) {
-		String line = reader.readLine();
-		if (line == null)
-		    break;
-		memoList.add(line);
-		Log.d("YAMA", "Got line: " + line);
-	    }
-	    memos.close();
-	} catch (Exception e) {
-	    Log.e("YAMA", "Error reading memos", e);
-	}
+    void openEditor(int position) {
+	getFragmentManager()
+	    .beginTransaction()
+	    .replace(android.R.id.content, editor.startFor(memoList.get(position)))
+	    .addToBackStack(null)
+	    .commit();
+	editPosition = position;
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-	if (resultCode != RESULT_OK)
-	    return;
-	int position = requestCode;
-	String edited = result.getStringExtra("edited");
-	memoList.remove(position);
-	for (String new_line : edited.split("\n")) {
-	    new_line = new_line.trim();
-	    if (new_line.isEmpty())
-		continue;
-	    memoList.add(position++, new_line);
-	}
-	runOnUiThread(new Runnable() {
-		public void run() {
-		    memoAdapter.notifyDataSetChanged();
-		}
-	    });
-	try {
-	    OutputStream file = openFileOutput("memo", Context.MODE_PRIVATE);
-	    for (String line : memoList) {
-		file.write(line.getBytes());
-		file.write("\n".getBytes());
-		Log.d("YAMA", "Writing from list: " + line);
-	    }
-	    file.close();
-	} catch (Exception e) {
-	    Log.e("YAMA", "Error writing memo", e);
-	}
+    private void closeEditor() {
+	getFragmentManager().popBackStack();
+	editor.reset();
+    }
+
+    private void applyEdit(List<String> result) {
+	listFragment.scrollTo = editPosition + result.size() - 1;
+	memoList.remove(editPosition);
+	memoList.addAll(editPosition, result);
+	MemoFile.save(this, memoList);
+	Toast.makeText(this,
+		       result.size() == 0 ? "Deleted" : "Saved",
+		       Toast.LENGTH_SHORT)
+	    .show();
+    }
+
+    @Override public void onBackPressed() {
+	if (editor.isActive())
+	    applyEdit(editor.getResult());
+	super.onBackPressed();
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {
 	case R.id.new_memo_btn:
-	    Intent intent = new Intent(this, MemoCreateActivity.class);
-	    startActivity(intent);
+	    createNew();
+	    return true;
+	case R.id.edit_done_btn:
+	    applyEdit(editor.getResult());
+	    closeEditor();
+	    return true;
+	case R.id.edit_cancel_btn:
+	    closeEditor();
+	    return true;
+	case R.id.edit_delete_btn:
+	    applyEdit(Collections.<String>emptyList());
+	    closeEditor();
 	    return true;
 	default:
 	    return false;
 	}
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-	MenuInflater inflater = getMenuInflater();
-	inflater.inflate(R.menu.list_menu, menu);
-	return true;
+    private void createNew() {
+	startActivity(new Intent(this, MemoCreateActivity.class));
+    }
+
+    static class Editor {
+	private EditFragment fragment;
+
+	Fragment startFor(String text) {
+	    fragment = new EditFragment();
+	    fragment.setMemo(text);
+	    return fragment;
+	}
+
+	boolean isActive() {
+	    return fragment != null;
+	}
+
+	List<String> getResult() {
+	    return MemoFile.sanitize(fragment.getMemo().split("\n"));
+	}
+
+	void reset() {
+	    fragment = null;
+	}
     }
 }

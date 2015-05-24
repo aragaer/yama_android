@@ -37,11 +37,11 @@ public class ListMemoTest {
 	ActivityController<MemoListActivity> controller =
 	        Robolectric.buildActivity(MemoListActivity.class);
 	controller.create();
-	MemoFile.write(controller.get(), new String[] {"test"});
+	MemoFile.append(controller.get(), new String[] {"test"});
 	controller.start();
 	controller.resume();
 	controller.pause();
-	MemoFile.write(controller.get(), new String[] {"test2"});
+	MemoFile.append(controller.get(), new String[] {"test2"});
 	controller.resume();
 	ListView list = (ListView) controller.get().findViewById(R.id.memo_list);
 	ListAdapter adapter = list.getAdapter();

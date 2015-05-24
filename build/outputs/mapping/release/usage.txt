@@ -3,7 +3,9 @@ com.aragaer.yama.MemoCreateActivity:
     private static final int SAVE_BUTTON_ID
     private static final int DISCARD_BUTTON_ID
 com.aragaer.yama.MemoFile:
-    9:9:public MemoFile()
+    private static final int MODE_APPEND
+    private static final int MODE_OVERWRITE
+    11:11:public MemoFile()
 com.aragaer.yama.R
 com.aragaer.yama.R$attr
 com.aragaer.yama.R$drawable

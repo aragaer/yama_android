@@ -1,45 +1,44 @@
-com.aragaer.yama.EditActivity -> com.aragaer.yama.EditActivity:
+com.aragaer.yama.EditFragment -> com.aragaer.yama.a:
     android.widget.EditText memo -> a
-    android.view.MenuItem$OnMenuItemClickListener cancelListener -> b
-    android.view.MenuItem$OnMenuItemClickListener doneListener -> c
-    android.view.MenuItem$OnMenuItemClickListener deleteListener -> d
-    void onCreate(android.os.Bundle) -> onCreate
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
-    void access$000(com.aragaer.yama.EditActivity,java.lang.String) -> a
-com.aragaer.yama.EditActivity$1 -> com.aragaer.yama.a:
-    com.aragaer.yama.EditActivity this$0 -> a
-    boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
-com.aragaer.yama.EditActivity$2 -> com.aragaer.yama.b:
-    com.aragaer.yama.EditActivity this$0 -> a
-    boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
-com.aragaer.yama.EditActivity$3 -> com.aragaer.yama.c:
-    com.aragaer.yama.EditActivity this$0 -> a
-    boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
+    java.lang.String text -> b
+    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
 com.aragaer.yama.MemoCreateActivity -> com.aragaer.yama.MemoCreateActivity:
     android.widget.EditText memo -> a
     android.view.MenuItem$OnMenuItemClickListener clickListener -> b
     void onCreate(android.os.Bundle) -> onCreate
     void onBackPressed() -> onBackPressed
-    void saveMemo() -> a
+    void exitToList() -> a
+    void saveMemo() -> b
     void createMenuItem(android.view.Menu,int,int) -> a
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     void access$000(com.aragaer.yama.MemoCreateActivity) -> a
-com.aragaer.yama.MemoCreateActivity$1 -> com.aragaer.yama.d:
+    void access$100(com.aragaer.yama.MemoCreateActivity) -> b
+com.aragaer.yama.MemoCreateActivity$1 -> com.aragaer.yama.b:
     com.aragaer.yama.MemoCreateActivity this$0 -> a
     boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
+com.aragaer.yama.MemoFile -> com.aragaer.yama.c:
+    com.aragaer.yama.EditFragment fragment -> a
+    void write(android.content.Context,java.util.List,int) -> a
+    java.util.List sanitize(java.lang.String[]) -> a
+    java.util.List getResult() -> a
 com.aragaer.yama.MemoListActivity -> com.aragaer.yama.MemoListActivity:
-    android.widget.ListView memoListView -> b
-    android.widget.ArrayAdapter memoAdapter -> a
-    java.util.List memoList -> c
-    android.widget.AdapterView$OnItemClickListener clickListener -> d
+    java.util.List memoList -> a
+    com.aragaer.yama.MemoListFragment listFragment -> d
+    int editPosition -> b
+    com.aragaer.yama.MemoFile editor$7f8e4972 -> c
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
-    void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    void closeEditor() -> a
+    void applyEdit(java.util.List) -> a
+    void onBackPressed() -> onBackPressed
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
-com.aragaer.yama.MemoListActivity$1 -> com.aragaer.yama.e:
-    com.aragaer.yama.MemoListActivity this$0 -> a
+com.aragaer.yama.MemoListFragment -> com.aragaer.yama.d:
+    android.widget.ListView memoListView -> c
+    android.widget.ArrayAdapter memoAdapter -> d
+    java.util.List memoList -> a
+    int scrollTo -> b
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.aragaer.yama.MemoListActivity$2 -> com.aragaer.yama.f:
-    com.aragaer.yama.MemoListActivity this$0 -> a
-    void run() -> run
+    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    void onResume() -> onResume
+    void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu

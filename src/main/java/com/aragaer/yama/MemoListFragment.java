@@ -20,7 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 
-public class MemoListFragment extends Fragment implements OnItemClickListener {
+class MemoListFragment extends Fragment implements OnItemClickListener {
 
     ListView memoListView;
     ArrayAdapter<String> memoAdapter;
@@ -29,6 +29,7 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 
     MemoListFragment() {
 	memoList = Collections.synchronizedList(new ArrayList<String>());
+	setHasOptionsMenu(true);
     }
 
     List<String> getList() {
@@ -36,7 +37,7 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	((MemoListActivity) getActivity()).openEditor(memoAdapter.getItem(position), position);
+	((MemoListActivity) getActivity()).openEditor(position);
     }
 
     @Override public View onCreateView(LayoutInflater inflater,
@@ -50,7 +51,6 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 	memoListView = (ListView) result.findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(this);
-	setHasOptionsMenu(true);
 	return result;
     }
 

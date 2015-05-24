@@ -5,9 +5,9 @@ import java.util.*;
 
 import android.content.Context;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.filters.FlakyTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.FlakyTest;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
@@ -247,14 +247,11 @@ public class ListActivityTest {
     }
 
 
-    @FlakyTest(tolerance=5)
+    @FlakyTest
     @Test public void toasts() {
 	onView(withId(R.id.new_memo_btn)).perform(click());
-	onView(withId(R.id.new_memo_edit))
-	    .perform(replaceText("abcd"));
-
-	android.support.test.espresso.Espresso.closeSoftKeyboard();
-	android.support.test.espresso.Espresso.pressBack();
+	onView(withId(R.id.new_memo_edit)).perform(replaceText("abcd"));
+	onView(withText("Done")).perform(click());
 
 	checkToast("Saved");
     }

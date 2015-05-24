@@ -7,6 +7,7 @@ import android.content.Context;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.FlakyTest;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
@@ -91,7 +92,6 @@ public class ListActivityTest {
 	android.support.test.espresso.Espresso.pressBack();
 
 	onView(withId(R.id.memo_list)).check(matches(isDisplayed()));
-	checkToast("Saved");
 	checkMemos("Some initial memo",
 		   "Two of them",
 		   "Have a cup of Espresso.",
@@ -246,6 +246,19 @@ public class ListActivityTest {
 	    .check(matches(isDisplayed()));
     }
 
+
+    @FlakyTest(tolerance=5)
+    @Test public void toasts() {
+	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_edit))
+	    .perform(replaceText("abcd"));
+
+	android.support.test.espresso.Espresso.closeSoftKeyboard();
+	android.support.test.espresso.Espresso.pressBack();
+
+	checkToast("Saved");
+    }
+    
     private void clickFirstItem() {
 	onData(anything())
 	    .inAdapterView(withId(R.id.memo_list))

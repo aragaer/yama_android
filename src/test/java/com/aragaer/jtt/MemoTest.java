@@ -13,4 +13,11 @@ public class MemoTest {
 	assertThat(memo.getText(),
 		   equalTo("A memo"));
     }
+
+    @Test public void lines() {
+	Memo memo = new Memo("A line", "Another line");
+
+	assertThat(memo.getText(),
+		   equalTo("A line\nAnother line"));
+    }
 }

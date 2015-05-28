@@ -84,18 +84,21 @@ public class MemoProviderTest {
     }
 
     @Test public void writeMemo() throws Exception {
-	Memo memo = new Memo("a new memo");
+	Memo memo1 = new Memo("a new memo 1");
+	Memo memo2 = new Memo("a new memo 2");
 
-        Uri uri = shadowResolver.insert(MemoProvider.MEMOS_URI,
-					MemoProvider.getMemoContentValues(memo));
+        Uri uri1 = shadowResolver.insert(MemoProvider.MEMOS_URI,
+					 MemoProvider.getMemoContentValues(memo1));
+        Uri uri2 = shadowResolver.insert(MemoProvider.MEMOS_URI,
+					 MemoProvider.getMemoContentValues(memo2));
 	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
 
-	assertThat(cursor.getCount(), equalTo(3));
-	verifyMemos(cursor, "line1\nline2", "Other memo", "a new memo");
+	assertThat(cursor.getCount(), equalTo(4));
+	verifyMemos(cursor, "line1\nline2", "Other memo", "a new memo 1", "a new memo 2");
 
 	String latestFile = MemoWriter.fileNameForDate(new Date());
 	assertThat(readMemoFile(latestFile),
-		   equalTo(Arrays.asList("a new memo")));
+		   equalTo(Arrays.asList("a new memo 1", "a new memo 2")));
     }
 
     private void verifyMemos(Cursor cursor, String... memos) {

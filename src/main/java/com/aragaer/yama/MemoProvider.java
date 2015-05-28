@@ -99,13 +99,16 @@ public class MemoProvider extends ContentProvider {
 	Date today = new Date();
 	String fileName = MemoWriter.fileNameForDate(today);
 	today = MemoReader.dateFromFileName(fileName);
-	List<Memo> todayList = new LinkedList<Memo>();
+	List<Memo> todayList = memos_.get(today);
+	if (todayList == null) {
+	    todayList = new LinkedList<Memo>();
+	    memos_.put(today, todayList);
+	}
 	Memo newMemo = memoFromContentValues(values);
 	todayList.add(newMemo);
-	memos_.put(today, todayList);
 	try {
 	    OutputStream todayStream = getContext().openFileOutput(fileName,
-								   Context.MODE_PRIVATE);
+								   Context.MODE_PRIVATE | Context.MODE_APPEND);
 	    MemoWriter writer = new MemoWriter(todayStream);
 	    writer.write(newMemo);
 	} catch (IOException e) {

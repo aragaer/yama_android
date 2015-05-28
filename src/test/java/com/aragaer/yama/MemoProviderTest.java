@@ -10,6 +10,7 @@ import java.util.List;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -78,17 +79,23 @@ public class MemoProviderTest {
 
 	assertThat(cursor.getCount(), equalTo(4));
 	verifyMemos(cursor, "a memo", "other one", "line1\nline2", "Other memo");
+	assertThat(readMemoFile("2015-05-10.txt"),
+		   equalTo(Arrays.asList("a memo", "other one")));
+    }
 
-	InputStream converted = Robolectric.application.openFileInput("2015-05-10.txt");
-	MemoReader reader = new MemoReader(converted);
-	List<String> memos = new LinkedList<String>();
-	while (true) {
-	    Memo memo = reader.readMemo();
-	    if (memo == null)
-		break;
-	    memos.add(memo.getText());
-	}
-	assertThat(memos, equalTo(Arrays.asList("a memo", "other one")));
+    @Test public void writeMemo() throws Exception {
+	Memo memo = new Memo("a new memo");
+
+        Uri uri = shadowResolver.insert(MemoProvider.MEMOS_URI,
+					MemoProvider.getMemoContentValues(memo));
+	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
+
+	assertThat(cursor.getCount(), equalTo(3));
+	verifyMemos(cursor, "line1\nline2", "Other memo", "a new memo");
+
+	String latestFile = MemoWriter.fileNameForDate(new Date());
+	assertThat(readMemoFile(latestFile),
+		   equalTo(Arrays.asList("a new memo")));
     }
 
     private void verifyMemos(Cursor cursor, String... memos) {
@@ -99,5 +106,17 @@ public class MemoProviderTest {
 	    cursor.moveToNext();
 	}
 	assertTrue(cursor.isAfterLast());
+    }
+
+    private List<String> readMemoFile(String fileName) throws Exception {
+	InputStream latest = Robolectric.application.openFileInput(fileName);
+	MemoReader reader = new MemoReader(latest);
+	List<String> memos = new LinkedList<String>();
+	while (true) {
+	    Memo memo = reader.readMemo();
+	    if (memo == null)
+		return memos;
+	    memos.add(memo.getText());
+	}
     }
 }

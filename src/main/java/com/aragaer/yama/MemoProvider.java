@@ -96,6 +96,21 @@ public class MemoProvider extends ContentProvider {
     }
 
     public Uri insert(Uri uri, ContentValues values) {
+	Date today = new Date();
+	String fileName = MemoWriter.fileNameForDate(today);
+	today = MemoReader.dateFromFileName(fileName);
+	List<Memo> todayList = new LinkedList<Memo>();
+	Memo newMemo = memoFromContentValues(values);
+	todayList.add(newMemo);
+	memos_.put(today, todayList);
+	try {
+	    OutputStream todayStream = getContext().openFileOutput(fileName,
+								   Context.MODE_PRIVATE);
+	    MemoWriter writer = new MemoWriter(todayStream);
+	    writer.write(newMemo);
+	} catch (IOException e) {
+	    // ugh
+	}
 	return null;
     }
 
@@ -118,5 +133,15 @@ public class MemoProvider extends ContentProvider {
 
     public static Memo readMemoFromCursor(Cursor cursor) {
 	return new Memo(cursor.getString(0));
+    }
+
+    public static ContentValues getMemoContentValues(Memo memo) {
+	ContentValues result = new ContentValues();
+	result.put("", memo.getText());
+	return result;
+    }
+
+    private static Memo memoFromContentValues(ContentValues values) {
+	return new Memo(values.getAsString(""));
     }
 }

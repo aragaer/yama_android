@@ -1,7 +1,11 @@
 package com.aragaer.yama;
 
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -18,6 +22,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -53,10 +58,7 @@ public class MemoProviderTest {
 	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
 
 	assertThat(cursor.getCount(), equalTo(2));
-	cursor.moveToFirst();
-	assertThat(cursor.getString(0), equalTo("line1\nline2"));
-	cursor.moveToNext();
-	assertThat(cursor.getString(0), equalTo("Other memo"));
+	verifyMemos(cursor, "line1\nline2", "Other memo");
     }
 
     @Test public void convertFromOldOne() throws Exception {
@@ -75,6 +77,27 @@ public class MemoProviderTest {
 	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
 
 	assertThat(cursor.getCount(), equalTo(4));
+	verifyMemos(cursor, "a memo", "other one", "line1\nline2", "Other memo");
+
+	InputStream converted = Robolectric.application.openFileInput("2015-05-10.txt");
+	MemoReader reader = new MemoReader(converted);
+	List<String> memos = new LinkedList<String>();
+	while (true) {
+	    Memo memo = reader.readMemo();
+	    if (memo == null)
+		break;
+	    memos.add(memo.getText());
+	}
+	assertThat(memos, equalTo(Arrays.asList("a memo", "other one")));
     }
 
+    private void verifyMemos(Cursor cursor, String... memos) {
+	cursor.moveToFirst();
+	for (String memo : memos) {
+	    assertThat(MemoProvider.readMemoFromCursor(cursor).getText(),
+		       equalTo(memo));
+	    cursor.moveToNext();
+	}
+	assertTrue(cursor.isAfterLast());
+    }
 }

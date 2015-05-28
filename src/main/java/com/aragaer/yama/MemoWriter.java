@@ -25,7 +25,7 @@ public class MemoWriter {
 	for (String line : memo.getText().split("\n")) {
 	    stream_.write("  ".getBytes());
 	    stream_.write(line.getBytes());
-	    stream_.write(10);
+	    stream_.write('\n');
 	}
     }
 }

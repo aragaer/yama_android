@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -22,17 +25,19 @@ public class MemoProvider extends ContentProvider {
 
     public static final Uri MEMOS_URI = Uri.parse("content://com.aragaer.yama.provider/memos");
 
-    private List<Memo> memos_;
+    private SortedMap<Date, List<Memo>> memos_;
 
     private void readMemoFile(String fileName) throws IOException {
 	InputStream stream = getContext().openFileInput(fileName);
 	MemoReader reader = new MemoReader(stream);
+	List<Memo> thisDateList = new LinkedList<Memo>();
 	while (true) {
 	    Memo memo = reader.readMemo();
 	    if (memo == null)
-		return;
-	    memos_.add(memo);
+		break;
+	    thisDateList.add(memo);
 	}
+	memos_.put(MemoReader.dateFromFileName(fileName), thisDateList);
     }
 
     private String getLegacyMemoFilename() {
@@ -49,21 +54,27 @@ public class MemoProvider extends ContentProvider {
 	return MemoWriter.fileNameForDate(calendar.getTime());
     }
 
-    private void handleOldMemoFile() {
-	try {
-	    getContext().openFileOutput(getLegacyMemoFilename(), Context.MODE_PRIVATE);
-	} catch (IOException e) {
-	}
+    private void convertOldMemoFile() {
 	List<String> out = new LinkedList<String>();
 	MemoFile.read(getContext(), out);
+	if (out.isEmpty())
+	    return;
+	try {
+	    String fileName = getLegacyMemoFilename();
+	    OutputStream converted = getContext().openFileOutput(fileName,
+								 Context.MODE_PRIVATE);
+	    MemoWriter writer = new MemoWriter(converted);
+	    for (String memo : out)
+		writer.write(new Memo(memo));
+	} catch (IOException e) {
+	    return;
+	}
 	getContext().deleteFile("memo");
-	for (String line : out)
-	    memos_.add(new Memo(""));
     }
 
     public boolean onCreate() {
-	memos_ = new LinkedList<Memo>();
-	handleOldMemoFile();
+	memos_ = new TreeMap<Date, List<Memo>>();
+	convertOldMemoFile();
 	try {
 	    for (String fileName : getContext().fileList())
 		if (fileName.endsWith(".txt"))
@@ -78,8 +89,9 @@ public class MemoProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 	MatrixCursor result = new MatrixCursor(new String[] {""});
-	for (Memo memo : memos_)
-	    result.newRow().add(memo.getText());
+	for (Map.Entry<Date, List<Memo>> entry : memos_.entrySet())
+	    for (Memo memo : entry.getValue())
+		putMemoToCursor(memo, result);
 	return result;
     }
 
@@ -98,5 +110,13 @@ public class MemoProvider extends ContentProvider {
 
     public String getType(Uri uri) {
 	return null;
+    }
+
+    private static void putMemoToCursor(Memo memo, MatrixCursor cursor) {
+	cursor.newRow().add(memo.getText());
+    }
+
+    public static Memo readMemoFromCursor(Cursor cursor) {
+	return new Memo(cursor.getString(0));
     }
 }

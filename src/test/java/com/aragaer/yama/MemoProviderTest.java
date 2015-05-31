@@ -1,11 +1,7 @@
 package com.aragaer.yama;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -22,8 +18,7 @@ import org.robolectric.shadows.ShadowContentResolver;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -87,9 +82,9 @@ public class MemoProviderTest {
 	Memo memo1 = new Memo("a new memo 1");
 	Memo memo2 = new Memo("a new memo 2");
 
-        Uri uri1 = shadowResolver.insert(MemoProvider.MEMOS_URI,
+	Uri uri1 = shadowResolver.insert(MemoProvider.MEMOS_URI,
 					 MemoProvider.getMemoContentValues(memo1));
-        Uri uri2 = shadowResolver.insert(MemoProvider.MEMOS_URI,
+	Uri uri2 = shadowResolver.insert(MemoProvider.MEMOS_URI,
 					 MemoProvider.getMemoContentValues(memo2));
 	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
 
@@ -99,6 +94,28 @@ public class MemoProviderTest {
 	String latestFile = MemoWriter.fileNameForDate(new Date());
 	assertThat(readMemoFile(latestFile),
 		   equalTo(Arrays.asList("a new memo 1", "a new memo 2")));
+    }
+
+    @Test public void deleteMemo() throws Exception {
+	Memo memo = new Memo("a memo");
+	Uri uri = shadowResolver.insert(MemoProvider.MEMOS_URI,
+					MemoProvider.getMemoContentValues(memo));
+
+	int deleteResult = shadowResolver.delete(uri, null, null);
+	assertThat(deleteResult, equalTo(1));
+
+	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
+
+	assertThat(cursor.getCount(), equalTo(2));
+	verifyMemos(cursor, "line1\nline2", "Other memo");
+
+	String latestFile = MemoWriter.fileNameForDate(new Date());
+	try {
+	    readMemoFile(latestFile);
+	    fail("File should not exist");
+	} catch (FileNotFoundException e) {
+	    // expected
+	}
     }
 
     private void verifyMemos(Cursor cursor, String... memos) {

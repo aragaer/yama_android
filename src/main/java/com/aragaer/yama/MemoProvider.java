@@ -114,7 +114,7 @@ public class MemoProvider extends ContentProvider {
 	} catch (IOException e) {
 	    // ugh
 	}
-	return null;
+	return MEMOS_URI;
     }
 
     public int update(Uri uri, ContentValues values, String selection,
@@ -123,7 +123,10 @@ public class MemoProvider extends ContentProvider {
     }
 
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-	return 0;
+	Date last = memos_.lastKey();
+	memos_.get(last).remove(0);
+	getContext().deleteFile(MemoWriter.fileNameForDate(last));
+	return 1;
     }
 
     public String getType(Uri uri) {

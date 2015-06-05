@@ -89,8 +89,8 @@ public class MemoProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 	MatrixCursor result = new MatrixCursor(new String[] {""});
-	for (Map.Entry<Date, List<Memo>> entry : memos_.entrySet())
-	    for (Memo memo : entry.getValue())
+	for (List<Memo> list : memos_.values())
+	    for (Memo memo : list)
 		putMemoToCursor(memo, result);
 	return result;
     }

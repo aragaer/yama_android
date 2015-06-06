@@ -29,4 +29,15 @@ public class MemoTest {
 	assertThat(memo.getText(),
 		   equalTo("A line\nAnother line"));
     }
+
+    @Test public void id() {
+	Memo memo = new Memo("a memo");
+	assertThat(memo.getId(), equalTo(Memo.NO_ID));
+
+	Memo memo2 = new Memo(10, "a memo");
+	assertThat(memo2.getId(), equalTo(10L));
+
+	memo.setId(20);
+	assertThat(memo.getId(), equalTo(20L));
+    }
 }

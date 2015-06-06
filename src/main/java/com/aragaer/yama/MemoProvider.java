@@ -12,8 +12,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -25,7 +27,19 @@ public class MemoProvider extends ContentProvider {
 
     public static final Uri MEMOS_URI = Uri.parse("content://com.aragaer.yama.provider/memos");
 
-    private SortedMap<Date, List<Memo>> memos_;
+    private static final String[] fields = "id text".split(" ");
+
+    private static final UriMatcher matcher = new UriMatcher(0);
+    private static final int CODE_ALL = 0;
+    private static final int CODE_ONE = 1;
+
+    static {
+	matcher.addURI(AUTHORITY, "memos", CODE_ALL);
+	matcher.addURI(AUTHORITY, "memos/#", CODE_ONE);
+    }
+
+    private SortedMap<Date, List<Memo>> memosByDate_;
+    private List<Memo> allMemos_;
 
     private void readMemoFile(String fileName) throws IOException {
 	InputStream stream = getContext().openFileInput(fileName);
@@ -36,8 +50,10 @@ public class MemoProvider extends ContentProvider {
 	    if (memo == null)
 		break;
 	    thisDateList.add(memo);
+	    memo.setId(allMemos_.size());
+	    allMemos_.add(memo);
 	}
-	memos_.put(MemoReader.dateFromFileName(fileName), thisDateList);
+	memosByDate_.put(MemoReader.dateFromFileName(fileName), thisDateList);
     }
 
     private String getLegacyMemoFilename() {
@@ -73,7 +89,8 @@ public class MemoProvider extends ContentProvider {
     }
 
     public boolean onCreate() {
-	memos_ = new TreeMap<Date, List<Memo>>();
+	memosByDate_ = new TreeMap<Date, List<Memo>>();
+	allMemos_ = new LinkedList<Memo>();
 	convertOldMemoFile();
 	try {
 	    for (String fileName : getContext().fileList())
@@ -88,10 +105,18 @@ public class MemoProvider extends ContentProvider {
 
     public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-	MatrixCursor result = new MatrixCursor(new String[] {""});
-	for (List<Memo> list : memos_.values())
-	    for (Memo memo : list)
-		putMemoToCursor(memo, result);
+	MatrixCursor result = new MatrixCursor(fields);
+	switch (matcher.match(uri)) {
+	case CODE_ALL:
+	    for (List<Memo> list : memosByDate_.values())
+		for (Memo memo : list)
+		    putMemoToCursor(memo, result);
+	    break;
+	case CODE_ONE:
+	    int id = (int) ContentUris.parseId(uri);
+	    putMemoToCursor(allMemos_.get(id), result);
+	    break;
+	}
 	return result;
     }
 
@@ -99,10 +124,10 @@ public class MemoProvider extends ContentProvider {
 	Date today = new Date();
 	String fileName = MemoWriter.fileNameForDate(today);
 	today = MemoReader.dateFromFileName(fileName);
-	List<Memo> todayList = memos_.get(today);
+	List<Memo> todayList = memosByDate_.get(today);
 	if (todayList == null) {
 	    todayList = new LinkedList<Memo>();
-	    memos_.put(today, todayList);
+	    memosByDate_.put(today, todayList);
 	}
 	Memo newMemo = memoFromContentValues(values);
 	todayList.add(newMemo);
@@ -123,8 +148,8 @@ public class MemoProvider extends ContentProvider {
     }
 
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-	Date last = memos_.lastKey();
-	memos_.get(last).remove(0);
+	Date last = memosByDate_.lastKey();
+	memosByDate_.get(last).remove(0);
 	getContext().deleteFile(MemoWriter.fileNameForDate(last));
 	return 1;
     }
@@ -134,20 +159,21 @@ public class MemoProvider extends ContentProvider {
     }
 
     private static void putMemoToCursor(Memo memo, MatrixCursor cursor) {
-	cursor.newRow().add(memo.getText());
+	cursor.newRow().add(memo.getId()).add(memo.getText());
     }
 
     public static Memo readMemoFromCursor(Cursor cursor) {
-	return new Memo(cursor.getString(0));
+	return new Memo(cursor.getLong(0), cursor.getString(1));
     }
 
     public static ContentValues getMemoContentValues(Memo memo) {
 	ContentValues result = new ContentValues();
-	result.put("", memo.getText());
+	result.put("id", memo.getId());
+	result.put("text", memo.getText());
 	return result;
     }
 
     private static Memo memoFromContentValues(ContentValues values) {
-	return new Memo(values.getAsString(""));
+	return new Memo(values.getAsLong("id"), values.getAsString("text"));
     }
 }

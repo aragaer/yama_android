@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -96,7 +97,7 @@ public class MemoProviderTest {
 		   equalTo(Arrays.asList("a new memo 1", "a new memo 2")));
     }
 
-    @Test public void deleteMemo() throws Exception {
+    @Test public void deleteMemoAndEmptyFile() throws Exception {
 	Memo memo = new Memo("a memo");
 	Uri uri = shadowResolver.insert(MemoProvider.MEMOS_URI,
 					MemoProvider.getMemoContentValues(memo));
@@ -116,6 +117,26 @@ public class MemoProviderTest {
 	} catch (FileNotFoundException e) {
 	    // expected
 	}
+    }
+
+    @Test public void memoIds() throws Exception {
+	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
+	cursor.moveToFirst();
+	Memo memo1 = MemoProvider.readMemoFromCursor(cursor);
+	cursor.moveToNext();
+	Memo memo2 = MemoProvider.readMemoFromCursor(cursor);
+
+	assertThat(memo1.getId(), not(equalTo(Memo.NO_ID)));
+	assertThat(memo1.getId(), not(equalTo(memo2.getId())));
+
+	long id = memo2.getId();
+	Cursor cursor2 = shadowResolver.query(ContentUris.withAppendedId(MemoProvider.MEMOS_URI, id),
+					      null, null, null, null);
+	assertThat(cursor2.getCount(), equalTo(1));
+	cursor2.moveToFirst();
+	Memo memo3 = MemoProvider.readMemoFromCursor(cursor2);
+	assertThat(memo3.getId(), equalTo(memo2.getId()));
+	assertThat(memo3.getText(), equalTo(memo2.getText()));
     }
 
     private void verifyMemos(Cursor cursor, String... memos) {

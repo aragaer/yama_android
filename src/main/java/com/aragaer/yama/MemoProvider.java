@@ -41,6 +41,10 @@ public class MemoProvider extends ContentProvider {
     private SortedMap<Date, List<Memo>> memosByDate_;
     private List<Memo> allMemos_;
 
+    private void assignId(Memo memo) {
+	memo.setId(allMemos_.size());
+    }
+
     private void storeMemo(Date date, Memo memo) {
 	List<Memo> list = memosByDate_.get(date);
 	if (list == null) {
@@ -52,7 +56,7 @@ public class MemoProvider extends ContentProvider {
 
     private void storeMemo(List<Memo> list, Memo memo) {
 	list.add(memo);
-	memo.setId(allMemos_.size());
+	assignId(memo);
 	allMemos_.add(memo);
     }
 
@@ -153,7 +157,12 @@ public class MemoProvider extends ContentProvider {
 
     public int update(Uri uri, ContentValues values, String selection,
 		      String[] selectionArgs) {
-	return 0;
+	Memo newMemo = memoFromContentValues(values);
+	long id = ContentUris.parseId(uri);
+	newMemo.setId(id);
+	allMemos_.set((int) id, newMemo);
+	memosByDate_.get(memosByDate_.firstKey()).set(0, newMemo);
+	return 1;
     }
 
     public int delete(Uri uri, String selection, String[] selectionArgs) {

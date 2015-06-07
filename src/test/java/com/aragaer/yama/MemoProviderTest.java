@@ -144,6 +144,30 @@ public class MemoProviderTest {
 	assertThat(memo3.getText(), equalTo(memo2.getText()));
     }
 
+    @Test public void update() throws Exception {
+	Cursor cursor = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
+	cursor.moveToFirst();
+	Memo memo = MemoProvider.readMemoFromCursor(cursor);
+	Memo newMemo = new Memo("a new text");
+
+	int updateResult = shadowResolver.update(ContentUris.withAppendedId(MemoProvider.MEMOS_URI, memo.getId()),
+						 MemoProvider.getMemoContentValues(newMemo), null, null);
+
+	assertThat(updateResult, equalTo(1));
+	Cursor cursor2 = shadowResolver.query(MemoProvider.MEMOS_URI, null, null, null, null);
+	assertThat(cursor2.getCount(), equalTo(2));
+	verifyMemos(cursor2, "a new text", "Other memo");
+
+	cursor2.moveToFirst();
+	Memo newMemoFromProvider = MemoProvider.readMemoFromCursor(cursor2);
+	assertThat(memo.getId(), equalTo(newMemoFromProvider.getId()));
+
+	Cursor cursor3 = shadowResolver.query(ContentUris.withAppendedId(MemoProvider.MEMOS_URI, memo.getId()),
+					      null, null, null, null);
+	assertThat(cursor3.getCount(), equalTo(1));
+	verifyMemos(cursor3, "a new text");
+    }
+
     private void verifyMemos(Cursor cursor, String... memos) {
 	cursor.moveToFirst();
 	for (String memo : memos) {

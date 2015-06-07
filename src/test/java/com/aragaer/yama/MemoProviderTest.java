@@ -95,6 +95,11 @@ public class MemoProviderTest {
 	String latestFile = MemoWriter.fileNameForDate(new Date());
 	assertThat(readMemoFile(latestFile),
 		   equalTo(Arrays.asList("a new memo 1", "a new memo 2")));
+
+	Cursor cursor2 = shadowResolver.query(uri1, null, null, null, null);
+
+	assertThat(cursor2.getCount(), equalTo(1));
+	//verifyMemos(cursor2, "a new memo 1");
     }
 
     @Test public void deleteMemoAndEmptyFile() throws Exception {

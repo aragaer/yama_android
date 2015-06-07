@@ -41,19 +41,33 @@ public class MemoProvider extends ContentProvider {
     private SortedMap<Date, List<Memo>> memosByDate_;
     private List<Memo> allMemos_;
 
+    private void storeMemo(Date date, Memo memo) {
+	List<Memo> list = memosByDate_.get(date);
+	if (list == null) {
+	    list = new LinkedList<Memo>();
+	    memosByDate_.put(date, list);
+	}
+	storeMemo(list, memo);
+    }
+
+    private void storeMemo(List<Memo> list, Memo memo) {
+	list.add(memo);
+	memo.setId(allMemos_.size());
+	allMemos_.add(memo);
+    }
+
     private void readMemoFile(String fileName) throws IOException {
 	InputStream stream = getContext().openFileInput(fileName);
 	MemoReader reader = new MemoReader(stream);
-	List<Memo> thisDateList = new LinkedList<Memo>();
+	Date date = MemoReader.dateFromFileName(fileName);
+	List<Memo> todayList = new LinkedList<Memo>();
+	memosByDate_.put(date, todayList);
 	while (true) {
 	    Memo memo = reader.readMemo();
 	    if (memo == null)
 		break;
-	    thisDateList.add(memo);
-	    memo.setId(allMemos_.size());
-	    allMemos_.add(memo);
+	    storeMemo(todayList, memo);
 	}
-	memosByDate_.put(MemoReader.dateFromFileName(fileName), thisDateList);
     }
 
     private String getLegacyMemoFilename() {
@@ -124,13 +138,8 @@ public class MemoProvider extends ContentProvider {
 	Date today = new Date();
 	String fileName = MemoWriter.fileNameForDate(today);
 	today = MemoReader.dateFromFileName(fileName);
-	List<Memo> todayList = memosByDate_.get(today);
-	if (todayList == null) {
-	    todayList = new LinkedList<Memo>();
-	    memosByDate_.put(today, todayList);
-	}
 	Memo newMemo = memoFromContentValues(values);
-	todayList.add(newMemo);
+	storeMemo(today, newMemo);
 	try {
 	    OutputStream todayStream = getContext().openFileOutput(fileName,
 								   Context.MODE_PRIVATE | Context.MODE_APPEND);
@@ -139,7 +148,7 @@ public class MemoProvider extends ContentProvider {
 	} catch (IOException e) {
 	    // ugh
 	}
-	return MEMOS_URI;
+	return ContentUris.withAppendedId(MEMOS_URI, newMemo.getId());
     }
 
     public int update(Uri uri, ContentValues values, String selection,

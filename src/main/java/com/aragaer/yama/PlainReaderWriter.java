@@ -62,7 +62,7 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
     }
 
     @Override public String getDefaultKey() {
-	return null;
+	return "";
     }
 
     @Override public void dropKey(String key) {

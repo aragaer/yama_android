@@ -34,12 +34,14 @@ public class MemoStorage<Key> {
 	return result;
     }
 
-    public void replaceMemo(Memo memo, String newText) {
+    public void replaceMemo(Memo memo, List<String> lines) {
 	Key key = ((_Memo) memo).getKey();
-	_Memo newMemo = new _Memo(newText, key);
-
 	int dayIndex = memos.get(key).indexOf(memo);
-	memos.get(key).set(dayIndex, newMemo);
+	memos.get(key).remove(dayIndex);
+	for (int i = 0; i < lines.size(); i++) {
+	    _Memo newMemo = new _Memo(lines.get(i), key);
+	    memos.get(key).add(dayIndex+i, newMemo);
+	}
     }
 
     public void deleteMemo(Memo memo) {

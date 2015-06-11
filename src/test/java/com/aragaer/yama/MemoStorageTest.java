@@ -36,7 +36,7 @@ public class MemoStorageTest {
     @Test public void replaceMemo() {
 	Memo memo = storage.storeMemo("a memo");
 
-	storage.replaceMemo(memo, "a new memo");
+	storage.replaceMemo(memo, Arrays.asList("a new memo"));
 
 	List<Memo> memos = storage.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(1));

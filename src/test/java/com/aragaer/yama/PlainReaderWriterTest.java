@@ -50,18 +50,6 @@ public class PlainReaderWriterTest {
 	assertThat(data, equalTo("memo\nother\n"));
     }
 
-    private static class TestMemo implements Memo {
-	private String text;
-
-	TestMemo(String text) {
-	    this.text = text;
-	}
-
-	@Override public String getText() {
-	    return text;
-	}
-    }
-
     private static class TestFileProvider implements MemoFileProvider {
 
 	String opened;

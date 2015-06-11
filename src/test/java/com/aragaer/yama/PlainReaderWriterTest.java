@@ -60,6 +60,10 @@ public class PlainReaderWriterTest {
 	    contents = newContents;
 	}
 
+	@Override public List<String> fileList() {
+	    return Arrays.asList(contents == null ? new String[0] : new String[] {"memo"});
+	}
+
 	@Override public InputStream openFileForReading(String name) {
 	    opened = name;
 	    if (contents == null)

@@ -27,6 +27,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.*;
 import static junit.framework.Assert.assertNotNull;
 
+import static com.aragaer.yama.OrientationChangeAction.*;
+
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -253,6 +255,14 @@ public class ListActivityTest {
 	onView(withText("Done")).perform(click());
 
 	checkToast("Saved");
+    }
+
+    @Test public void rotationDoesntAddStuff() {
+	onView(isRoot()).perform(orientationLandscape());
+	onView(isRoot()).perform(orientationPortrait());
+
+	// verify there's only one button - will fail with multiple buttons
+	onView(withId(R.id.new_memo_btn)).perform(click());
     }
     
     private void clickFirstItem() {

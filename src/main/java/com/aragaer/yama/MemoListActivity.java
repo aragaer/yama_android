@@ -27,12 +27,15 @@ public class MemoListActivity extends Activity {
 	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
 	storage = new MemoStorage(readerWriter);
 
-	listFragment = new MemoListFragment();
+	listFragment = (MemoListFragment) getFragmentManager().findFragmentById(android.R.id.content);
+	if (listFragment == null) {
+	    listFragment = new MemoListFragment();
+	    getFragmentManager()
+		.beginTransaction()
+		.add(android.R.id.content, listFragment)
+		.commit();
+	}
 	memoList = listFragment.getList();
-	getFragmentManager()
-	    .beginTransaction()
-	    .add(android.R.id.content, listFragment)
-	    .commit();
     }
 
     protected void onResume() {

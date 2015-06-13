@@ -2,6 +2,7 @@ package com.aragaer.yama;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.test.filters.FlakyTest;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
@@ -29,14 +30,15 @@ public class CreateActivityTest extends InstrumentationTestCase {
 
     private UiDevice uidevice;
 
-    @Before public void setUp() {
+    @Before public void setUp() throws Exception {
 	uidevice = UiDevice.getInstance(getInstrumentation());
     }
 
+    @FlakyTest
     @Test public void testBackstack() throws Exception {
 	goHome();
 	launchCreateActivity();
-	new UiObject(new UiSelector().text("Done")).click();
+	uidevice.pressBack();
 	goHome();
 	launchCreateActivity();
 	assertTrue(new UiObject(new UiSelector().resourceId("com.aragaer.yama:id/new_memo_edit")).exists());
@@ -44,10 +46,21 @@ public class CreateActivityTest extends InstrumentationTestCase {
 
     private void goHome() {
 	uidevice.pressHome();
+	UiSelector overlaySelector = new UiSelector().resourceId("com.android.launcher:id/workspace_cling");
+	UiObject greeterOverlay = uidevice.findObject(overlaySelector);
+	if (greeterOverlay.exists())
+	    uidevice.findObject(By.text("OK")).click();
+    }
+
+    private void openApps() throws Exception {
+	uidevice.findObject(new UiSelector().description("Apps")).clickAndWaitForNewWindow();
+	UiObject greetingOverlayDismiss = uidevice.findObject(new UiSelector().resourceId("com.android.launcher:id/cling_dismiss"));
+	if (greetingOverlayDismiss.exists())
+	    greetingOverlayDismiss.click();
     }
 
     private void launchCreateActivity() throws Exception {
-	new UiObject(new UiSelector().description("Apps")).clickAndWaitForNewWindow();
+	openApps();
 	new UiObject(new UiSelector().text("Apps")).click();
 	UiScrollable ListOfapplications = new UiScrollable(new UiSelector().scrollable(true));
 	UiObject create = ListOfapplications.getChildByText(new UiSelector().className(android.widget.TextView.class.getName()), "create memo");

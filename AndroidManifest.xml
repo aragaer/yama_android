@@ -11,7 +11,8 @@
        <activity
 	   android:name=".MemoCreateActivity"
 	   android:icon="@drawable/ic_launcher"
-	   android:label="create memo" >
+	   android:label="create memo"
+	   android:launchMode="singleInstance">
 	   <intent-filter>
 	       <action android:name="android.intent.action.MAIN" />
 	       <category android:name="android.intent.category.LAUNCHER"/>

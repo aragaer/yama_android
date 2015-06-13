@@ -44,7 +44,8 @@ public class MemoCreateActivity extends Activity {
 	finish();
 	KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
 	if (!km.inKeyguardRestrictedInputMode())
-	    startActivity(new Intent(this, MemoListActivity.class));
+	    startActivity(new Intent(this, MemoListActivity.class)
+			  .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     private void saveMemo() {

@@ -20,7 +20,7 @@ before_script:
   - android-wait-for-emulator
 
 script:
-  - ./gradlew test --daemon
+  - ./gradlew testRegularDebug --daemon
   - adb shell input keyevent 82 &
   - ./gradlew installInstrumentedDebug installInstrumentedDebugAndroidTest --daemon
   - adb shell am instrument -w -e notAnnotation android.support.test.filters.FlakyTest com.aragaer.yama.test/android.support.test.runner.AndroidJUnitRunner | tee test.log

@@ -1,6 +1,7 @@
 package com.aragaer.yama;
 // vim: et ts=4 sts=4 sw=4
 
+import java.io.OutputStream;
 import java.util.Arrays;
 
 import org.junit.*;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static android.content.Context.MODE_PRIVATE;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -28,25 +30,44 @@ public class ListMemoTest {
 	MemoListActivity activity = Robolectric.setupActivity(MemoListActivity.class);
 	activity.onOptionsItemSelected(new TestMenuItem(R.id.new_memo_btn));
 
-        Intent expectedIntent = new Intent(activity, MemoCreateActivity.class);
-        assertThat(Robolectric.shadowOf(activity).getNextStartedActivity(),
+	Intent expectedIntent = new Intent(activity, MemoCreateActivity.class);
+	assertThat(Robolectric.shadowOf(activity).getNextStartedActivity(),
 		   equalTo(expectedIntent));
     }
 
-    @Test public void shouldResetBeforeReading() {
+    @Test public void readFile() throws Exception {
 	ActivityController<MemoListActivity> controller =
-	        Robolectric.buildActivity(MemoListActivity.class);
+		Robolectric.buildActivity(MemoListActivity.class);
 	controller.create();
-	MemoFile.append(controller.get(), new String[] {"test"});
+	write("test\n");
+	controller.start();
+	controller.resume();
+	ListView list = (ListView) controller.get().findViewById(R.id.memo_list);
+	ListAdapter adapter = list.getAdapter();
+	assertThat(adapter.getCount(), equalTo(1));
+	assertThat(((Memo) adapter.getItem(0)).getText(), equalTo("test"));
+    }
+
+    @Test public void shouldResetBeforeReading() throws Exception {
+	ActivityController<MemoListActivity> controller =
+		Robolectric.buildActivity(MemoListActivity.class);
+	controller.create();
+	write("test\n");
 	controller.start();
 	controller.resume();
 	controller.pause();
-	MemoFile.append(controller.get(), new String[] {"test2"});
+	write("test\ntest2\n");
 	controller.resume();
 	ListView list = (ListView) controller.get().findViewById(R.id.memo_list);
 	ListAdapter adapter = list.getAdapter();
 	assertThat(adapter.getCount(), equalTo(2));
-	assertThat((String) adapter.getItem(0), equalTo("test"));
-	assertThat((String) adapter.getItem(1), equalTo("test2"));
+	assertThat(((Memo) adapter.getItem(0)).getText(), equalTo("test"));
+	assertThat(((Memo) adapter.getItem(1)).getText(), equalTo("test2"));
+    }
+
+    static void write(String text) throws Exception {
+	OutputStream stream = Robolectric.application.openFileOutput("memo", MODE_PRIVATE);
+	stream.write(text.getBytes());
+	stream.close();
     }
 }

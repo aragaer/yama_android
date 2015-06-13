@@ -1,5 +1,7 @@
 package com.aragaer.yama;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
@@ -46,7 +48,16 @@ public class MemoCreateActivity extends Activity {
     }
 
     private void saveMemo() {
-	MemoFile.append(this, memo.getText().toString().split("\n"));
+	List<String> lines = MemoProcessor.sanitize(memo.getText().toString().split("\n"));
+	if (lines.isEmpty())
+	    return;
+	MemoFileProvider fileProvider = new AndroidFileProvider(this);
+	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
+	MemoStorage storage = new MemoStorage(readerWriter);
+	storage.updateFromReaderWriter();
+	for (String line : lines)
+	    storage.storeMemo(line);
+	storage.dumpToReaderWriter();
 	Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
     }
 

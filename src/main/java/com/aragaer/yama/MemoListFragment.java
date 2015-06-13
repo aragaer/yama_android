@@ -18,26 +18,27 @@ import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class MemoListFragment extends Fragment implements OnItemClickListener {
 
     ListView memoListView;
-    ArrayAdapter<String> memoAdapter;
-    List<String> memoList;
+    ArrayAdapter<Memo> memoAdapter;
+    List<Memo> memoList;
     int scrollTo = -1;
 
     public MemoListFragment() {
-	memoList = Collections.synchronizedList(new ArrayList<String>());
+	memoList = Collections.synchronizedList(new ArrayList<Memo>());
 	setHasOptionsMenu(true);
     }
 
-    List<String> getList() {
+    List<Memo> getList() {
 	return memoList;
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	((MemoListActivity) getActivity()).openEditor(position);
+	((MemoListActivity) getActivity()).openEditor(position, memoList.get(position));
     }
 
     @Override public View onCreateView(LayoutInflater inflater,
@@ -45,21 +46,31 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 				       Bundle savedInstanceState) {
 	View result = inflater.inflate(R.layout.list, root, false);
 
-	memoAdapter = new ArrayAdapter<String>(getActivity(),
-					       android.R.layout.simple_list_item_1,
-					       memoList);
+	memoAdapter = new ArrayAdapter<Memo>(getActivity(),
+					     android.R.layout.simple_list_item_1,
+					     memoList) {
+		@Override public View getView(int position, View convertView, ViewGroup parent) {
+		    View result = super.getView(position, convertView, parent);
+		    ((TextView) result).setText(getItem(position).getText());
+		    return result;
+		}
+	    };
 	memoListView = (ListView) result.findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(this);
 	return result;
     }
 
-    @Override public void onResume(){
+    public void scrollTo(int position) {
+	memoListView.setSelection(position);
+    }
+
+    @Override public void onResume() {
 	super.onResume();
 	if (scrollTo == -1)
-	    memoListView.setSelection(memoAdapter.getCount() - 1);
+	    scrollTo(memoList.size() - 1);
 	else
-	    memoListView.setSelection(scrollTo);
+	    scrollTo(scrollTo);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
    package="com.aragaer.yama"
-   android:versionCode="4"
-   android:versionName="0.3" >
+   android:versionCode="5"
+   android:versionName="0.4" >
    <uses-sdk
       android:minSdkVersion="14"
       android:targetSdkVersion="21" />
@@ -11,7 +11,8 @@
        <activity
 	   android:name=".MemoCreateActivity"
 	   android:icon="@drawable/ic_launcher"
-	   android:label="create memo" >
+	   android:label="create memo"
+	   android:launchMode="singleInstance">
 	   <intent-filter>
 	       <action android:name="android.intent.action.MAIN" />
 	       <category android:name="android.intent.category.LAUNCHER"/>

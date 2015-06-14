@@ -13,33 +13,47 @@ import android.widget.Toast;
 
 public class MemoListActivity extends Activity {
 
-    private List<String> memoList;
+    private List<Memo> memoList;
     private MemoListFragment listFragment;
     private int editPosition = -1;
     private Editor editor;
+    private MemoStorage storage;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
 	editor = new Editor();
+	MemoFileProvider fileProvider = new AndroidFileProvider(this);
+	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
+	storage = new MemoStorage(readerWriter);
 
-	listFragment = new MemoListFragment();
+	listFragment = (MemoListFragment) getFragmentManager().findFragmentById(android.R.id.content);
+	if (listFragment == null) {
+	    listFragment = new MemoListFragment();
+	    getFragmentManager()
+		.beginTransaction()
+		.add(android.R.id.content, listFragment)
+		.commit();
+	}
 	memoList = listFragment.getList();
-	getFragmentManager()
-	    .beginTransaction()
-	    .add(android.R.id.content, listFragment)
-	    .commit();
     }
 
     protected void onResume() {
 	super.onResume();
-	MemoFile.read(this, memoList);
+	storage.updateFromReaderWriter();
+	updateFromStorage();
     }
 
-    void openEditor(int position) {
+    private void updateFromStorage() {
+	memoList.clear();
+	List<? extends Memo> memos = storage.getAllActiveMemos();
+	memoList.addAll(memos);
+    }
+
+    void openEditor(int position, Memo memo) {
 	getFragmentManager()
 	    .beginTransaction()
-	    .replace(android.R.id.content, editor.startFor(memoList.get(position)))
+	    .replace(android.R.id.content, editor.startFor(memo))
 	    .addToBackStack(null)
 	    .commit();
 	editPosition = position;
@@ -51,10 +65,11 @@ public class MemoListActivity extends Activity {
     }
 
     private void applyEdit(List<String> result) {
+	List<? extends Memo> list = storage.getAllActiveMemos();
+	storage.replaceMemo(list.get(editPosition), result);
+	storage.dumpToReaderWriter();
+	updateFromStorage();
 	listFragment.scrollTo = editPosition + result.size() - 1;
-	memoList.remove(editPosition);
-	memoList.addAll(editPosition, result);
-	MemoFile.save(this, memoList);
 	Toast.makeText(this,
 		       result.size() == 0 ? "Deleted" : "Saved",
 		       Toast.LENGTH_SHORT)
@@ -95,9 +110,9 @@ public class MemoListActivity extends Activity {
     static class Editor {
 	private EditFragment fragment;
 
-	Fragment startFor(String text) {
+	Fragment startFor(Memo memo) {
 	    fragment = new EditFragment();
-	    fragment.setMemo(text);
+	    fragment.setMemo(memo.getText());
 	    return fragment;
 	}
 
@@ -106,7 +121,7 @@ public class MemoListActivity extends Activity {
 	}
 
 	List<String> getResult() {
-	    return MemoFile.sanitize(fragment.getMemo().split("\n"));
+	    return MemoProcessor.sanitize(fragment.getMemo().split("\n"));
 	}
 
 	void reset() {

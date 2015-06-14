@@ -1,0 +1,79 @@
+com.aragaer.yama.EditFragment -> com.aragaer.yama.a:
+    android.widget.EditText memo -> a
+    java.lang.String text -> b
+    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+com.aragaer.yama.Memo -> com.aragaer.yama.b:
+    java.lang.String getText() -> a
+    java.util.SortedSet getKeys() -> b
+    java.util.List readMemosForKey$505be9ea() -> c
+    void writeMemosForKey$1f98c302(java.util.List) -> a
+    java.lang.Object getDefaultKey() -> d
+com.aragaer.yama.MemoCreateActivity -> com.aragaer.yama.MemoCreateActivity:
+    android.widget.EditText memo -> a
+    android.view.MenuItem$OnMenuItemClickListener clickListener -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onBackPressed() -> onBackPressed
+    void exitToList() -> a
+    void saveMemo() -> b
+    void createMenuItem(android.view.Menu,int,int) -> a
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void access$000(com.aragaer.yama.MemoCreateActivity) -> a
+    void access$100(com.aragaer.yama.MemoCreateActivity) -> b
+com.aragaer.yama.MemoCreateActivity$1 -> com.aragaer.yama.c:
+    com.aragaer.yama.MemoCreateActivity this$0 -> a
+    boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
+com.aragaer.yama.MemoFileProvider -> com.aragaer.yama.d:
+    android.content.Context context_ -> a
+    java.io.InputStream openFileForReading(java.lang.String) -> a
+    java.io.OutputStream openFileForWriting(java.lang.String) -> b
+    java.util.List sanitize(java.lang.String[]) -> a
+com.aragaer.yama.MemoListActivity -> com.aragaer.yama.MemoListActivity:
+    java.util.List memoList -> c
+    com.aragaer.yama.MemoListFragment listFragment -> d
+    int editPosition -> a
+    com.aragaer.yama.MemoListActivity$Editor editor -> b
+    com.aragaer.yama.MemoStorage storage -> e
+    void onCreate(android.os.Bundle) -> onCreate
+    void onResume() -> onResume
+    void updateFromStorage() -> a
+    void closeEditor() -> b
+    void applyEdit(java.util.List) -> a
+    void onBackPressed() -> onBackPressed
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+com.aragaer.yama.MemoListActivity$Editor -> com.aragaer.yama.e:
+    com.aragaer.yama.EditFragment fragment -> a
+    java.util.List getResult() -> a
+com.aragaer.yama.MemoListFragment -> com.aragaer.yama.f:
+    android.widget.ListView memoListView -> c
+    android.widget.ArrayAdapter memoAdapter -> d
+    java.util.List memoList -> a
+    int scrollTo -> b
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    void scrollTo(int) -> a
+    void onResume() -> onResume
+    void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+com.aragaer.yama.MemoListFragment$1 -> com.aragaer.yama.g:
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+com.aragaer.yama.MemoStorage -> com.aragaer.yama.h:
+    java.util.TreeMap memos -> a
+    com.aragaer.yama.Memo readerWriter$748fc34a -> b
+    java.util.List getAllActiveMemos() -> a
+    void updateFromReaderWriter() -> b
+    void dumpToReaderWriter() -> c
+com.aragaer.yama.MemoStorage$_Memo -> com.aragaer.yama.i:
+    java.lang.Object key -> a
+    java.lang.String text -> b
+    java.lang.String getText() -> a
+com.aragaer.yama.PlainReaderWriter -> com.aragaer.yama.j:
+    java.util.TreeSet KEY_SET -> a
+    com.aragaer.yama.MemoFileProvider fileProvider -> b
+    java.util.SortedSet getKeys() -> b
+    java.util.List readMemosForKey$3ff9fd98() -> e
+    java.lang.Object getDefaultKey() -> d
+    void writeMemosForKey$1f98c302(java.util.List) -> a
+    java.util.List readMemosForKey$505be9ea() -> c
+com.aragaer.yama.PlainReaderWriter$_Memo -> com.aragaer.yama.k:
+    java.lang.String text -> a
+    java.lang.String getText() -> a

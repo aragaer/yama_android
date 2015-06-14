@@ -13,6 +13,7 @@ import android.util.Log;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.BaseMatcher;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
@@ -25,6 +26,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.*;
 import static junit.framework.Assert.assertNotNull;
+
+import static com.aragaer.yama.OrientationChangeAction.*;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -220,7 +223,7 @@ public class ListActivityTest {
 	    .perform(replaceText(text));
 	onView(withText(R.string.action_save)).perform(click());
 
-	onData(allOf(is(instanceOf(String.class)), is("y")))
+	onData(isMemoWithText("y"))
 	    .inAdapterView(withId(R.id.memo_list))
 	    .perform(click());
 
@@ -241,9 +244,7 @@ public class ListActivityTest {
 	mActivityRule.getActivity().finish(); // force restart of main activity
 	onView(withText(R.string.action_save)).perform(click());
 
-	onData(allOf(is(instanceOf(String.class)), is("y")))
-	    .inAdapterView(withId(R.id.memo_list))
-	    .check(matches(isDisplayed()));
+	onView(withText("y")).check(matches(isDisplayed()));
     }
 
 
@@ -254,6 +255,14 @@ public class ListActivityTest {
 	onView(withText("Done")).perform(click());
 
 	checkToast("Saved");
+    }
+
+    @Test public void rotationDoesntAddStuff() {
+	onView(isRoot()).perform(orientationLandscape());
+	onView(isRoot()).perform(orientationPortrait());
+
+	// verify there's only one button - will fail with multiple buttons
+	onView(withId(R.id.new_memo_btn)).perform(click());
     }
     
     private void clickFirstItem() {
@@ -279,5 +288,17 @@ public class ListActivityTest {
 	onView(withText(toast))
 	    .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
 	    .check(matches(isDisplayed()));
+    }
+
+    private Matcher<Object> isMemoWithText(final String text) {
+	return new BaseMatcher<Object>() {
+	    @Override public boolean matches(Object memo) {
+		return ((Memo) memo).getText().equals(text);
+	    }
+
+	    @Override public void describeTo(Description description) {
+		description.appendText("Memo should be ").appendValue(text);
+	    }
+	};
     }
 }

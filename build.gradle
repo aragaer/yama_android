@@ -1,10 +1,10 @@
 // vim: et ts=4 sts=4 sw=4 syntax=groovy
 buildscript {
     repositories {
-        mavenCentral()
+	mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.2'
+	classpath 'com.android.tools.build:gradle:1.2.2'
     }
 }
 
@@ -15,73 +15,85 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
-dependencies {
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest-core:1.1'
-    testCompile 'org.robolectric:robolectric:2.4'
-    testCompile 'com.android.support:support-v4:22.1.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.1'
-}
-
 android {
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['res']
-        }
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
+    compileSdkVersion 21
+    buildToolsVersion '22.0.1'
 
-        androidTest.setRoot('src/instrumentation')
-        test.setRoot('src/test')
+    productFlavors {
+	regular {
+	}
+	instrumented {
+	    minSdkVersion 18
+	}
+    }
+
+    sourceSets {
+	main {
+	    manifest.srcFile 'AndroidManifest.xml'
+	    java.srcDirs = ['src/main/java']
+	    res.srcDirs = ['res']
+	}
+	debug.setRoot('build-types/debug')
+	release.setRoot('build-types/release')
+
+	test.setRoot('src/test')
     }
 
     defaultConfig {
-    	testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+	testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    compileSdkVersion 'android-21'
-    buildToolsVersion '22.0.1'
 
     signingConfigs {
-        release {
-            storeFile file(".")
-            storePassword ''
-            keyAlias ''
-            keyPassword ''
-        }
+	release {
+	    storeFile file(".")
+	    storePassword ''
+	    keyAlias ''
+	    keyPassword ''
+	}
     }
 
     buildTypes {
-        debug {
-        }
-        release {
-            minifyEnabled true
-            proguardFile 'proguard.cfg'
-            signingConfig signingConfigs.release
-            zipAlignEnabled true
-        }
+	debug {
+	}
+	release {
+	    minifyEnabled true
+	    proguardFile 'proguard.cfg'
+	    signingConfig signingConfigs.release
+	    zipAlignEnabled true
+	}
     }
-    
+
     packagingOptions {
-        exclude 'LICENSE.txt'
+	exclude 'LICENSE.txt'
     }
 }
 
+dependencies {
+    compile 'com.android.support:support-annotations:22.2.0'
+    compile 'com.android.support:support-v4:22.1.1'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-core:1.1'
+    testCompile 'org.robolectric:robolectric:2.4'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
+    androidTestInstrumentedCompile 'com.android.support.test:rules:0.3'
+    androidTestInstrumentedCompile 'com.android.support.test:runner:0.3'
+    androidTestInstrumentedCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+}
+
 gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.hasTask(':assembleRelease')) {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    if (taskGraph.hasTask(':assembleRegularRelease')) {
+	Properties properties = new Properties()
+	properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-        def store_file = file(properties.getProperty('key.file'))
-        def store_pass = System.console().readPassword("\nPlease enter store passphrase: ")
-        def key_alias = properties.getProperty('key.alias')
-        def key_pass = System.console().readPassword("\nPlease enter key passphrase: ")
+	def store_file = file(properties.getProperty('key.file'))
+	def store_pass = System.console().readPassword("\nPlease enter store passphrase: ")
+	def key_alias = properties.getProperty('key.alias')
+	def key_pass = System.console().readPassword("\nPlease enter key passphrase: ")
 
-        android.signingConfigs.release.storeFile = store_file
-        android.signingConfigs.release.storePassword = new String(store_pass)
-        android.signingConfigs.release.keyAlias = new String(key_alias)
-        android.signingConfigs.release.keyPassword = new String(key_pass)
+	android.signingConfigs.release.storeFile = store_file
+	android.signingConfigs.release.storePassword = new String(store_pass)
+	android.signingConfigs.release.keyAlias = new String(key_alias)
+	android.signingConfigs.release.keyPassword = new String(key_pass)
     }
 }
 

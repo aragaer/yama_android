@@ -23,7 +23,7 @@ public class CreateMemoTest {
     @Test public void testBackSaves() throws Exception {
 	MemoCreateActivity activity = Robolectric.setupActivity(MemoCreateActivity.class);
 	EditText text = (EditText) activity.findViewById(R.id.new_memo_edit);
-	text.setText("hello, world");
+	text.setText(" hello, world\n  \n\n");
 
 	activity.onBackPressed();
 

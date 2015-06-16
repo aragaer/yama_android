@@ -16,14 +16,16 @@ repositories {
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion '22.0.1'
 
     productFlavors {
 	regular {
+	    targetSdkVersion 22
 	}
 	instrumented {
 	    minSdkVersion 18
+	    targetSdkVersion 22
 	}
     }
 
@@ -71,6 +73,7 @@ android {
 dependencies {
     compile 'com.android.support:support-annotations:22.2.0'
     compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.1'
     testCompile 'org.robolectric:robolectric:2.4'

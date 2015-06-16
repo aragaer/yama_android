@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:yama="http://schemas.android.com/apk/res-auto">
   <item android:id="@+id/edit_done_btn"
         android:title="Done"
-        android:showAsAction="always"/>
+        yama:showAsAction="always"/>
   <item android:id="@+id/edit_cancel_btn"
         android:title="Cancel"
-        android:showAsAction="always"/>
+        yama:showAsAction="always"/>
   <item android:id="@+id/edit_delete_btn"
         android:title="Delete"
-        android:showAsAction="always"/>
+        yama:showAsAction="always"/>
 </menu>

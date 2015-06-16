@@ -3,15 +3,15 @@ package com.aragaer.yama;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class MemoListActivity extends Activity {
+public class MemoListActivity extends ActionBarActivity {
 
     private List<Memo> memoList;
     private MemoListFragment listFragment;
@@ -21,18 +21,19 @@ public class MemoListActivity extends Activity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	setContentView(R.layout.main);
 
 	editor = new Editor();
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
 	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
 	storage = new MemoStorage(readerWriter);
 
-	listFragment = (MemoListFragment) getFragmentManager().findFragmentById(android.R.id.content);
+	listFragment = (MemoListFragment) getFragmentManager().findFragmentById(R.id.app_content);
 	if (listFragment == null) {
 	    listFragment = new MemoListFragment();
 	    getFragmentManager()
 		.beginTransaction()
-		.add(android.R.id.content, listFragment)
+		.add(R.id.app_content, listFragment)
 		.commit();
 	}
 	memoList = listFragment.getList();
@@ -53,7 +54,7 @@ public class MemoListActivity extends Activity {
     void openEditor(int position, Memo memo) {
 	getFragmentManager()
 	    .beginTransaction()
-	    .replace(android.R.id.content, editor.startFor(memo))
+	    .replace(R.id.app_content, editor.startFor(memo))
 	    .addToBackStack(null)
 	    .commit();
 	editPosition = position;

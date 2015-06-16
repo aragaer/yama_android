@@ -2,18 +2,18 @@ package com.aragaer.yama;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class MemoCreateActivity extends Activity {
+public class MemoCreateActivity extends ActionBarActivity {
 
     EditText memo;
 

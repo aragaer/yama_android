@@ -110,7 +110,7 @@ public class MemoListActivity extends ActionBarActivity {
 	}
     }
 
-    private void createNew() {
+    void createNew() {
 	startActivity(new Intent(this, MemoCreateActivity.class));
     }
 

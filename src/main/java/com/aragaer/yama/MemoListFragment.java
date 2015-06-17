@@ -30,7 +30,6 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 
     public MemoListFragment() {
 	memoList = Collections.synchronizedList(new ArrayList<Memo>());
-	setHasOptionsMenu(true);
     }
 
     List<Memo> getList() {
@@ -58,6 +57,12 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 	memoListView = (ListView) result.findViewById(R.id.memo_list);
 	memoListView.setAdapter(memoAdapter);
 	memoListView.setOnItemClickListener(this);
+
+	result.findViewById(R.id.new_memo_btn).setOnClickListener(new View.OnClickListener() {
+		@Override public void onClick(View v) {
+		    ((MemoListActivity) MemoListFragment.this.getActivity()).createNew();
+		}
+	    });
 	return result;
     }
 
@@ -71,9 +76,5 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 	    scrollTo(memoList.size() - 1);
 	else
 	    scrollTo(scrollTo);
-    }
-
-    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	inflater.inflate(R.menu.list_menu, menu);
     }
 }

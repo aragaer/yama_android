@@ -74,6 +74,7 @@ dependencies {
     compile 'com.android.support:support-annotations:22.2.0'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:design:22.2.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.1'
     testCompile 'org.robolectric:robolectric:2.4'

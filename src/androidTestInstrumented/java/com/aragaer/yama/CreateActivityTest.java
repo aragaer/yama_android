@@ -34,7 +34,6 @@ public class CreateActivityTest extends InstrumentationTestCase {
 	uidevice = UiDevice.getInstance(getInstrumentation());
     }
 
-    @FlakyTest
     @Test public void testBackstack() throws Exception {
 	goHome();
 	launchCreateActivity();
@@ -46,17 +45,10 @@ public class CreateActivityTest extends InstrumentationTestCase {
 
     private void goHome() {
 	uidevice.pressHome();
-	UiSelector overlaySelector = new UiSelector().resourceId("com.android.launcher:id/workspace_cling");
-	UiObject greeterOverlay = uidevice.findObject(overlaySelector);
-	if (greeterOverlay.exists())
-	    uidevice.findObject(By.text("OK")).click();
     }
 
     private void openApps() throws Exception {
 	uidevice.findObject(new UiSelector().description("Apps")).clickAndWaitForNewWindow();
-	UiObject greetingOverlayDismiss = uidevice.findObject(new UiSelector().resourceId("com.android.launcher:id/cling_dismiss"));
-	if (greetingOverlayDismiss.exists())
-	    greetingOverlayDismiss.click();
     }
 
     private void launchCreateActivity() throws Exception {

@@ -2,6 +2,7 @@ package com.aragaer.yama;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -76,6 +77,9 @@ public class PlainReaderWriterTest {
 	    opened = name;
 	    written = new ByteArrayOutputStream();
 	    return written;
+	}
+
+	@Override public void closeFile(Closeable stream) {
 	}
     }
 }

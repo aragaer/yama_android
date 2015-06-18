@@ -26,11 +26,7 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
     @Override public void writeMemosForKey(String key, List<? extends Memo> memos) {
 	OutputStream stream = _fileProvider.openFileForWriting(key);
 	new WriteRunner(stream).writeAll(memos);
-	try {
-	    stream.close();
-	} catch (IOException e) {
-	    // oops?
-	}
+	_fileProvider.closeFile(stream);
     }
 
     @Override public List<? extends Memo> readMemosForKey(String key) {

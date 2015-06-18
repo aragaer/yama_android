@@ -46,13 +46,12 @@ public class MemoListFragment extends Fragment implements OnItemClickListener {
 				       Bundle savedInstanceState) {
 	View result = inflater.inflate(R.layout.list, root, false);
 
-	memoAdapter = new ArrayAdapter<Memo>(getActivity(),
-					     android.R.layout.simple_list_item_1,
-					     memoList) {
+	memoAdapter = new ArrayAdapter<Memo>(getActivity(), R.layout.item, memoList) {
 		@Override public View getView(int position, View convertView, ViewGroup parent) {
-		    View result = super.getView(position, convertView, parent);
-		    ((TextView) result).setText(getItem(position).getText());
-		    return result;
+		    if (convertView == null)
+			convertView = View.inflate(parent.getContext(), R.layout.item, null);
+		    ((TextView) convertView.findViewById(R.id.text)).setText(getItem(position).getText());
+		    return convertView;
 		}
 	    };
 	memoListView = (ListView) result.findViewById(R.id.memo_list);

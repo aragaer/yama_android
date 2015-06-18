@@ -21,6 +21,7 @@
        <activity
 	   android:name=".MemoListActivity"
 	   android:icon="@drawable/ic_launcher"
+	   android:windowSoftInputMode="adjustPan"
 	   android:label="list memos" >
 	   <intent-filter>
 	       <action android:name="android.intent.action.MAIN" />

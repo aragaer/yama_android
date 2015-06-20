@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.TreeMap;
 
 
-public class MemoHandler<Key> {
+public class MemoHandler {
 
-    private TreeMap<Key, List<_Memo>> memos;
-    private MemoReaderWriter<Key> readerWriter;
+    private TreeMap<String, List<_Memo>> memos;
+    private MemoReaderWriter readerWriter;
 
-    public MemoHandler(MemoReaderWriter<Key> readerWriter) {
-	memos = new TreeMap<Key, List<_Memo>>();
+    public MemoHandler(MemoReaderWriter readerWriter) {
+	memos = new TreeMap<String, List<_Memo>>();
 	this.readerWriter = readerWriter;
     }
 
@@ -24,7 +24,7 @@ public class MemoHandler<Key> {
     }
 
     public Memo storeMemo(String text) {
-	Key key = readerWriter.getDefaultKey();
+	String key = readerWriter.getDefaultKey();
 	_Memo result = new _Memo(text, key);
 	List<_Memo> list = memos.get(key);
 	if (list == null) {
@@ -36,7 +36,7 @@ public class MemoHandler<Key> {
     }
 
     public void replaceMemo(Memo memo, List<String> lines) {
-	Key key = ((_Memo) memo).getKey();
+	String key = ((_Memo) memo).getKey();
 	int dayIndex = memos.get(key).indexOf(memo);
 	memos.get(key).remove(dayIndex);
 	for (int i = 0; i < lines.size(); i++) {
@@ -46,21 +46,20 @@ public class MemoHandler<Key> {
     }
 
     public void deleteMemo(Memo memo) {
-	Key key = ((_Memo) memo).getKey();
+	String key = ((_Memo) memo).getKey();
 	memos.get(key).remove(memo);
     }
 
     public void updateFromReaderWriter() {
-	for (Key key : readerWriter.getKeys()) {
-	    List<_Memo> list = new LinkedList<_Memo>();
-	    for (Memo memo : readerWriter.readMemosForKey(key))
-		list.add(new _Memo(memo.getText(), key));
-	    memos.put(key, list);
-	}
+	String key = "memo";
+	List<_Memo> list = new LinkedList<_Memo>();
+	for (Memo memo : readerWriter.readMemosForKey(key))
+	    list.add(new _Memo(memo.getText(), key));
+	memos.put(key, list);
     }
 
     public void dumpToReaderWriter() {
-	for (Key key : memos.keySet()) {
+	for (String key : memos.keySet()) {
 	    List<_Memo> list = memos.get(key);
 	    if (list.isEmpty())
 		readerWriter.dropKey(key);
@@ -70,14 +69,14 @@ public class MemoHandler<Key> {
     }
 
     private class _Memo extends Memo {
-	private Key key;
+	private String key;
 
-	_Memo(String text, Key key) {
+	_Memo(String text, String key) {
 	    super(text);
 	    this.key = key;
 	}
 
-	Key getKey() {
+	String getKey() {
 	    return key;
 	}
     }

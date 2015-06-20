@@ -4,26 +4,31 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
+import java.lang.StringBuilder;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-public class PlainReaderWriter implements MemoReaderWriter<String> {
+public class PlainReaderWriter implements MemoReaderWriter {
 
-    public static final String FILE_SUFFIX = "";
+    public static final String FILE_SUFFIX = PlainFormatter.FILE_SUFFIX;
 
     private static final TreeSet<String> KEY_SET = new TreeSet<String>();
+    private final MemoFormatter formatter;
 
     static {
 	KEY_SET.add("");
     }
 
-    private final MemoFileProvider fileProvider;
+    private final MemoFileProvider _fileProvider;
 
     public PlainReaderWriter(MemoFileProvider fileProvider) {
-	this.fileProvider = fileProvider;
+	_fileProvider = fileProvider;
+	formatter = new PlainFormatter();
     }
 
     @Override public SortedSet<String> getKeys() {
@@ -31,36 +36,32 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
     }
 
     @Override public void writeMemosForKey(String key, List<Memo> memos) {
-	OutputStream stream = fileProvider.openFileForWriting("memo");
+	OutputStream stream = _fileProvider.openFileForWriting("memo");
+	StringBuilder builder = new StringBuilder();
+	formatter.formatAllTo(memos, builder);
 	try {
-	    for (Memo memo : memos) {
-		stream.write(memo.getText().getBytes());
-		stream.write("\n".getBytes());
-	    }
+	    stream.write(builder.toString().getBytes());
 	} catch (Exception e) {
 	    // oops
 	}
-	fileProvider.closeFile(stream);
+	_fileProvider.closeFile(stream);
     }
 
+
     @Override public List<Memo> readMemosForKey(String key) {
-	InputStream stream = fileProvider.openFileForReading("memo");
-	List<Memo> result = new LinkedList<Memo>();
-	if (stream == null)
-	    return result;
-	BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-	try {
-	    while (true) {
-		String line = reader.readLine();
-		if (line == null)
-		    break;
-		result.add(new Memo(line));
-	    }
-	} catch (Exception e) {
-	    // oops?
+	InputStream stream = _fileProvider.openFileForReading(getFileNameForKey("memo"));
+	LinkedList<Memo> result = new LinkedList<Memo>();
+	if (stream != null) {
+	    Scanner swallow = new Scanner(stream).useDelimiter("\\A");
+	    String contents = swallow.hasNext() ? swallow.next() : "";
+	    formatter.parseAllTo(result, contents);
+	    _fileProvider.closeFile(stream);
 	}
-	fileProvider.closeFile(stream);
 	return result;
+    }
+
+    private String getFileNameForKey(String key) {
+	return key+FILE_SUFFIX;
     }
 
     @Override public String getDefaultKey() {

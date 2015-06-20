@@ -16,7 +16,7 @@ public class MemoStorage {
 
     private void convertLegacyFile() {
 	if (_fileProvider.fileList().contains("memo")) {
-	    List<? extends Memo> legacy = new PlainReaderWriter(_fileProvider).readMemosForKey("");
+	    List<Memo> legacy = new PlainReaderWriter(_fileProvider).readMemosForKey("");
 	    _readerWriter.writeMemosForKey("memo", legacy);
 	    _fileProvider.deleteFile("memo");
 	}
@@ -26,7 +26,7 @@ public class MemoStorage {
 	return _readerWriter.readMemosForKey("memo");
     }
 
-    public void writeMemos(List<? extends Memo> memos) {
+    public void writeMemos(List<Memo> memos) {
 	_readerWriter.writeMemosForKey("memo", memos);
     }
 }

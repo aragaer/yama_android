@@ -12,12 +12,12 @@ import java.util.Scanner;
 import java.util.SortedSet;
 
 
-public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
+public class OrgmodeReaderWriter implements MemoReaderWriter {
 
     public static final String FILE_SUFFIX = OrgmodeFormatter.FILE_SUFFIX;
 
     private final MemoFileProvider _fileProvider;
-    private final OrgmodeFormatter formatter;
+    private final MemoFormatter formatter;
 
     public OrgmodeReaderWriter(MemoFileProvider fileProvider) {
 	_fileProvider = fileProvider;
@@ -34,35 +34,25 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 
     @Override public void writeMemosForKey(String key, List<Memo> memos) {
 	OutputStream stream = _fileProvider.openFileForWriting(getFileNameForKey(key));
-	writeMemosToStream(stream, memos);
-	_fileProvider.closeFile(stream);
-    }
-
-    private void writeMemosToStream(OutputStream stream, List<Memo> memos) {
 	StringBuilder builder = new StringBuilder();
 	formatter.formatAllTo(memos, builder);
 	try {
 	    stream.write(builder.toString().getBytes());
 	} catch (IOException e) {
 	}
+	_fileProvider.closeFile(stream);
     }
 
     @Override public List<Memo> readMemosForKey(String key) {
 	InputStream stream;
 	LinkedList<Memo> result = new LinkedList<Memo>();
-	stream = _fileProvider.openFileForReading(getFileNameForKey(key));
+	stream = _fileProvider.openFileForReading(getFileNameForKey("memo"));
 	if (stream != null) {
-	    result.addAll(readMemosFromStream(stream));
+	    Scanner swallow = new Scanner(stream).useDelimiter("\\A");
+	    String contents = swallow.hasNext() ? swallow.next() : "";
+	    formatter.parseAllTo(result, contents);
 	    _fileProvider.closeFile(stream);
 	}
-	return result;
-    }
-
-    private List<Memo> readMemosFromStream(InputStream stream) {
-	LinkedList<Memo> result = new LinkedList<Memo>();
-	Scanner swallow = new Scanner(stream).useDelimiter("\\A");
-	String contents = swallow.hasNext() ? swallow.next() : "";
-	formatter.parseAllTo(result, contents);
 	return result;
     }
 

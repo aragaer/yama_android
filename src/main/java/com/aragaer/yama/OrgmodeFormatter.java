@@ -4,14 +4,14 @@ import java.lang.StringBuilder;
 import java.util.List;
 
 
-public class OrgmodeFormatter {
+public class OrgmodeFormatter implements MemoFormatter {
     public static final String FILE_SUFFIX = ".org";
 
-    public void formatAllTo(List<Memo> memos, StringBuilder out) {
+    @Override public void formatAllTo(List<Memo> memos, StringBuilder out) {
 	new Formatter(out).formatAll(memos);
     }
 
-    public void parseAllTo(List<Memo> memos, String contents) {
+    @Override public void parseAllTo(List<Memo> memos, String contents) {
 	new Parser(contents).parseAll(memos);
     }
 

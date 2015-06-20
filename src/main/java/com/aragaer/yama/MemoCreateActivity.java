@@ -52,12 +52,12 @@ public class MemoCreateActivity extends Activity {
 	if (lines.isEmpty())
 	    return;
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
-	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
-	MemoHandler storage = new MemoHandler(readerWriter);
-	storage.updateFromReaderWriter();
+	MemoStorage storage = new MemoStorage(fileProvider);
+	MemoHandler handler = new MemoHandler(storage);
+	handler.updateFromReaderWriter();
 	for (String line : lines)
-	    storage.storeMemo(line);
-	storage.dumpToReaderWriter();
+	    handler.storeMemo(line);
+	handler.dumpToReaderWriter();
 	Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
     }
 

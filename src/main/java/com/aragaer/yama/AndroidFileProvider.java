@@ -3,6 +3,7 @@ package com.aragaer.yama;
 import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +43,14 @@ public class AndroidFileProvider implements MemoFileProvider {
     }
 
     @Override public void closeFile(Closeable stream) {
+	try {
+	    stream.close();
+	} catch (IOException e) {
+	    Log.e("YAMA", "Failed to close file: " + e.toString());
+	}
     }
 
     @Override public void deleteFile(String fileName) {
+	context_.deleteFile(fileName);
     }
 }

@@ -17,6 +17,7 @@ public class MemoListActivity extends Activity {
     private MemoListFragment listFragment;
     private int editPosition = -1;
     private Editor editor;
+    private MemoStorage storage;
     private MemoHandler memoKeeper;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +25,8 @@ public class MemoListActivity extends Activity {
 
 	editor = new Editor();
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
-	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
-	memoKeeper = new MemoHandler(readerWriter);
+	storage = new MemoStorage(fileProvider);
+	memoKeeper = new MemoHandler(storage);
 
 	listFragment = (MemoListFragment) getFragmentManager().findFragmentById(android.R.id.content);
 	if (listFragment == null) {
@@ -39,14 +40,14 @@ public class MemoListActivity extends Activity {
     }
 
     protected void onResume() {
-	super.onResume();
 	memoKeeper.updateFromReaderWriter();
 	updateFromKeeper();
+	super.onResume();
     }
 
     private void updateFromKeeper() {
 	memoList.clear();
-	List<? extends Memo> memos = memoKeeper.getAllActiveMemos();
+	List<Memo> memos = memoKeeper.getAllActiveMemos();
 	memoList.addAll(memos);
     }
 

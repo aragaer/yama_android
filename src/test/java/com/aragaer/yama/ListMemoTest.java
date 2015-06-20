@@ -39,7 +39,7 @@ public class ListMemoTest {
 	ActivityController<MemoListActivity> controller =
 		Robolectric.buildActivity(MemoListActivity.class);
 	controller.create();
-	write("test\n");
+	write("* \n  test\n");
 	controller.start();
 	controller.resume();
 	ListView list = (ListView) controller.get().findViewById(R.id.memo_list);
@@ -52,11 +52,11 @@ public class ListMemoTest {
 	ActivityController<MemoListActivity> controller =
 		Robolectric.buildActivity(MemoListActivity.class);
 	controller.create();
-	write("test\n");
+	write("* \n  test\n");
 	controller.start();
 	controller.resume();
 	controller.pause();
-	write("test\ntest2\n");
+	write("* \n  test\n* \n  test2\n");
 	controller.resume();
 	ListView list = (ListView) controller.get().findViewById(R.id.memo_list);
 	ListAdapter adapter = list.getAdapter();
@@ -66,7 +66,7 @@ public class ListMemoTest {
     }
 
     static void write(String text) throws Exception {
-	OutputStream stream = Robolectric.application.openFileOutput("memo", MODE_PRIVATE);
+	OutputStream stream = Robolectric.application.openFileOutput("memo.org", MODE_PRIVATE);
 	stream.write(text.getBytes());
 	stream.close();
     }

@@ -72,4 +72,14 @@ public class AndroidFileProviderTest {
 	assertThat(read, equalTo(4));
 	assertThat(Charset.defaultCharset().decode(ByteBuffer.wrap(buffer, 0, read)).toString(), equalTo("text"));
     }
+
+    @Test public void shouldDeleteFile() throws Exception {
+	OutputStream stream = Robolectric.application.openFileOutput("file", MODE_PRIVATE);
+	stream.write("text".getBytes());
+	stream.close();
+
+	fileProvider.deleteFile("file");
+
+	assertThat(fileProvider.fileList().size(), equalTo(0));
+    }
 }

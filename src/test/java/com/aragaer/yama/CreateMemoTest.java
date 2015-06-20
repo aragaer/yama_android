@@ -28,12 +28,12 @@ public class CreateMemoTest {
 	activity.onBackPressed();
 
 	assertThat(readMemosFile(activity),
-		   equalTo(Arrays.asList("hello, world")));
+		   equalTo(Arrays.asList("* ", "  hello, world")));
     }
 
     private List<String> readMemosFile(MemoCreateActivity activity) throws Exception {
 	List<String> result = new LinkedList<String>();
-	InputStream file = activity.openFileInput("memo");
+	InputStream file = activity.openFileInput("memo.org");
 	BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 	while (true) {
 	    String line = reader.readLine();

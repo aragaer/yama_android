@@ -33,7 +33,7 @@ public class OrgmodeReaderWriter implements MemoReaderWriter {
     }
 
     @Override public void writeMemosForKey(String key, List<Memo> memos) {
-	OutputStream stream = _fileProvider.openFileForWriting(getFileNameForKey(key));
+	OutputStream stream = _fileProvider.openFileForWriting(getFileNameForKey("memo"));
 	StringBuilder builder = new StringBuilder();
 	formatter.formatAllTo(memos, builder);
 	try {
@@ -44,9 +44,8 @@ public class OrgmodeReaderWriter implements MemoReaderWriter {
     }
 
     @Override public List<Memo> readMemosForKey(String key) {
-	InputStream stream;
+	InputStream stream = _fileProvider.openFileForReading(getFileNameForKey("memo"));
 	LinkedList<Memo> result = new LinkedList<Memo>();
-	stream = _fileProvider.openFileForReading(getFileNameForKey("memo"));
 	if (stream != null) {
 	    Scanner swallow = new Scanner(stream).useDelimiter("\\A");
 	    String contents = swallow.hasNext() ? swallow.next() : "";

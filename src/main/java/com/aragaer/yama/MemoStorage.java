@@ -22,7 +22,7 @@ public class MemoStorage {
 	}
     }
 
-    public List<? extends Memo> readMemos() {
+    public List<Memo> readMemos() {
 	return _readerWriter.readMemosForKey("memo");
     }
 

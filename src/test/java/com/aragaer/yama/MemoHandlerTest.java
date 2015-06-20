@@ -9,110 +9,95 @@ import static org.junit.Assert.*;
 
 public class MemoHandlerTest {
 
-    private MemoHandler storage;
-    private TestReaderWriter readerWriter;
+    private MemoHandler handler;
+    private TestMemoStorage storage;
 
     @Before public void setUp() {
-	readerWriter = new TestReaderWriter();
-	storage = new MemoHandler(readerWriter);
-	assertThat(storage.getAllActiveMemos().size(), equalTo(0));
+	storage = new TestMemoStorage();
+	handler = new MemoHandler(storage);
+	assertThat(handler.getAllActiveMemos().size(), equalTo(0));
     }
 
     @Test public void addMemo() {
-	Memo memo = storage.storeMemo("a memo");
+	Memo memo = handler.storeMemo("a memo");
 	assertThat(memo.getText(), equalTo("a memo"));
 
-	List<Memo> memos = storage.getAllActiveMemos();
+	List<Memo> memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(1));
 	assertThat(memos.get(0).getText(), equalTo("a memo"));
 
-	storage.dumpToReaderWriter();
+	handler.dumpToReaderWriter();
 
-	assertThat(readerWriter.memos.size(), equalTo(1));
-	assertThat(readerWriter.memos.get("1").size(), equalTo(1));
-	assertThat(readerWriter.memos.get("1").get(0).getText(), equalTo("a memo"));
+	assertThat(storage.memos.size(), equalTo(1));
+	assertThat(storage.memos.get(0).getText(), equalTo("a memo"));
     }
 
     @Test public void replaceMemo() {
-	Memo memo = storage.storeMemo("a memo");
+	Memo memo = handler.storeMemo("a memo");
 
-	storage.replaceMemo(memo, Arrays.asList("a new memo"));
+	handler.replaceMemo(memo, Arrays.asList("a new memo"));
 
-	List<Memo> memos = storage.getAllActiveMemos();
+	List<Memo> memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(1));
 	assertThat(memos.get(0).getText(), equalTo("a new memo"));
 
-	storage.dumpToReaderWriter();
+	handler.dumpToReaderWriter();
 
-	assertThat(readerWriter.memos.size(), equalTo(1));
-	assertThat(readerWriter.memos.get("1").size(), equalTo(1));
-	assertThat(readerWriter.memos.get("1").get(0).getText(), equalTo("a new memo"));
+	assertThat(storage.memos.size(), equalTo(1));
+	assertThat(storage.memos.get(0).getText(), equalTo("a new memo"));
     }
 
     @Test public void deleteMemo() {
-	Memo memo = storage.storeMemo("a memo");
+	Memo memo = handler.storeMemo("a memo");
 
-	storage.deleteMemo(memo);
+	handler.deleteMemo(memo);
 
-	List<Memo> memos = storage.getAllActiveMemos();
+	List<Memo> memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(0));
 
-	storage.dumpToReaderWriter();
+	handler.dumpToReaderWriter();
 
-	assertThat(readerWriter.memos.size(), equalTo(0));
+	assertThat(storage.memos.size(), equalTo(0));
     }
 
-    // TODO: Rewrite this test when keys have a meaning
-    @Test @Ignore public void useReaderWriter() {
+    @Test public void useStorage() {
 	List<Memo> test_memos = new LinkedList<Memo>();
 	test_memos.add(new Memo("a memo"));
-	readerWriter.writeMemosForKey("1", test_memos);
+	storage.writeMemos(test_memos);
 
-	storage.updateFromReaderWriter();
+	handler.updateFromReaderWriter();
 
-	List<Memo> memos = storage.getAllActiveMemos();
+	List<Memo> memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(1));
 	assertThat(memos.get(0).getText(), equalTo("a memo"));
 
-	storage.storeMemo("new memo");
+	handler.storeMemo("new memo");
 
-	memos = storage.getAllActiveMemos();
+	memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(2));
 	assertThat(memos.get(0).getText(), equalTo("a memo"));
 	assertThat(memos.get(1).getText(), equalTo("new memo"));
 
-	storage.dumpToReaderWriter();
+	handler.dumpToReaderWriter();
 
-	assertThat(readerWriter.memos.size(), equalTo(2));
-	assertThat(readerWriter.memos.get("0").size(), equalTo(1));
-	assertThat(readerWriter.memos.get("1").size(), equalTo(1));
+	assertThat(storage.memos.size(), equalTo(2));
     }
 
-    private static class TestReaderWriter implements MemoReaderWriter {
-	public TreeMap<String, List<Memo>> memos;
+    private static class TestMemoStorage extends MemoStorage {
+	List<Memo> memos;
 
-	public TestReaderWriter() {
-	    memos = new TreeMap<String, List<Memo>>();
+	TestMemoStorage() {
+	    super(new TestFileProvider());
+	    memos = new LinkedList<Memo>();
 	}
 
-	public SortedSet<String> getKeys() {
-	    return ((NavigableMap<String, ?>) memos).navigableKeySet();
+	public List<Memo> readMemos() {
+	    return memos;
 	}
 
-	public List<Memo> readMemosForKey(String key) {
-	    return memos.get("memo");
+	public void writeMemos(List<Memo> memos) {
+	    this.memos = memos;
 	}
 
-	public void writeMemosForKey(String key, List<Memo> memos) {
-	    this.memos.put(key, memos);
-	}
-
-	public String getDefaultKey() {
-	    return "1";
-	}
-
-	public void dropKey(String key) {
-	    this.memos.remove(key);
-	}
     }
 }

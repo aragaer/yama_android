@@ -5,6 +5,8 @@ import java.util.SortedSet;
 
 
 public interface MemoReaderWriter<Key> {
+    public static final String FILE_SUFFIX = null;
+
     public SortedSet<Key> getKeys();
     public List<? extends Memo> readMemosForKey(Key key);
     public void writeMemosForKey(Key key, List<? extends Memo> memos);

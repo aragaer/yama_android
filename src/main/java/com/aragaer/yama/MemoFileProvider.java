@@ -10,5 +10,6 @@ public interface MemoFileProvider {
     public List<String> fileList();
     public InputStream openFileForReading(String fileName);
     public OutputStream openFileForWriting(String fileName);
+    public void deleteFile(String fileName);
     public void closeFile(Closeable stream);
 }

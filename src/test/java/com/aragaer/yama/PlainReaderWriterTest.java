@@ -31,12 +31,11 @@ public class PlainReaderWriterTest {
 
     @Test public void noMemoFileIsOK() {
 	List<? extends Memo> memos = readerWriter.readMemosForKey("memo");
-	assertThat(fileProvider.opened, equalTo("memo"));
 	assertThat(memos.size(), equalTo(0));
     }
 
     @Test public void readMemoFile() {
-	fileProvider.setContents("memo\nanother memo\nYo\n");
+	fileProvider.setContents("memo", "memo\nanother memo\nYo\n");
 	List<? extends Memo> memos = readerWriter.readMemosForKey("memo");
 	assertThat(memos.size(), equalTo(3));
 	assertThat(memos.get(0).getText(), equalTo("memo"));
@@ -46,40 +45,11 @@ public class PlainReaderWriterTest {
     @Test public void writeMemoFile() {
 	List<TestMemo> memos = Arrays.asList(new TestMemo("memo"), new TestMemo("other"));
 	readerWriter.writeMemosForKey("memo", memos);
-	assertThat(fileProvider.opened, equalTo("memo"));
-	String data = fileProvider.written.toString();
+	String data = fileProvider.files.get("memo");
 	assertThat(data, equalTo("memo\nother\n"));
     }
 
-    private static class TestFileProvider implements MemoFileProvider {
-
-	String opened;
-	String contents;
-	ByteArrayOutputStream written;
-
-	void setContents(String newContents) {
-	    contents = newContents;
-	}
-
-	@Override public List<String> fileList() {
-	    return Arrays.asList(contents == null ? new String[0] : new String[] {"memo"});
-	}
-
-	@Override public InputStream openFileForReading(String name) {
-	    opened = name;
-	    if (contents == null)
-		return null;
-	    else
-		return new ByteArrayInputStream(contents.getBytes());
-	}
-
-	@Override public OutputStream openFileForWriting(String name) {
-	    opened = name;
-	    written = new ByteArrayOutputStream();
-	    return written;
-	}
-
-	@Override public void closeFile(Closeable stream) {
-	}
+    @Test public void fileSuffix() {
+	assertThat(PlainReaderWriter.FILE_SUFFIX, equalTo(""));
     }
 }

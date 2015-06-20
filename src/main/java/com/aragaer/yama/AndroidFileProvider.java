@@ -43,4 +43,7 @@ public class AndroidFileProvider implements MemoFileProvider {
 
     @Override public void closeFile(Closeable stream) {
     }
+
+    @Override public void deleteFile(String fileName) {
+    }
 }

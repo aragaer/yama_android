@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 public class PlainReaderWriter implements MemoReaderWriter<String> {
 
+    public static final String FILE_SUFFIX = "";
+
     private static final TreeSet<String> KEY_SET = new TreeSet<String>();
 
     static {
@@ -35,10 +37,10 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
 		stream.write(memo.getText().getBytes());
 		stream.write("\n".getBytes());
 	    }
-	    stream.close();
 	} catch (Exception e) {
 	    // oops
 	}
+	fileProvider.closeFile(stream);
     }
 
     @Override public List<? extends Memo> readMemosForKey(String key) {
@@ -54,10 +56,10 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
 		    break;
 		result.add(new _Memo(line));
 	    }
-	    stream.close();
 	} catch (Exception e) {
 	    // oops?
 	}
+	fileProvider.closeFile(stream);
 	return result;
     }
 

@@ -53,7 +53,7 @@ public class MemoCreateActivity extends Activity {
 	    return;
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
 	MemoReaderWriter readerWriter = new PlainReaderWriter(fileProvider);
-	MemoStorage storage = new MemoStorage(readerWriter);
+	MemoHandler storage = new MemoHandler(readerWriter);
 	storage.updateFromReaderWriter();
 	for (String line : lines)
 	    storage.storeMemo(line);

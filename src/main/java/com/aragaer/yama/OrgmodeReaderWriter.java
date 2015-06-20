@@ -1,6 +1,7 @@
 package com.aragaer.yama;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.util.SortedSet;
 
 public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 
+    public static final String FILE_SUFFIX = ".org";
+
     private final MemoFileProvider _fileProvider;
 
     public OrgmodeReaderWriter(MemoFileProvider fileProvider) {
@@ -23,21 +26,34 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 	return null;
     }
 
+    private String getFileNameForKey(String key) {
+	return key+FILE_SUFFIX;
+    }
+
     @Override public void writeMemosForKey(String key, List<? extends Memo> memos) {
-	OutputStream stream = _fileProvider.openFileForWriting(key);
-	new WriteRunner(stream).writeAll(memos);
+	OutputStream stream = _fileProvider.openFileForWriting(getFileNameForKey(key));
+	writeMemosToStream(stream, memos);
 	_fileProvider.closeFile(stream);
     }
 
+    private void writeMemosToStream(OutputStream stream, List<? extends Memo> memos) {
+	new WriteRunner(stream).writeAll(memos);
+    }
+
     @Override public List<? extends Memo> readMemosForKey(String key) {
+	InputStream stream;
 	LinkedList<_Memo> result = new LinkedList<_Memo>();
-	InputStream stream = _fileProvider.openFileForReading(key);
-	new ReadRunner(stream).fill(result);
-	try {
-	    stream.close();
-	} catch (IOException e) {
-	    // oops?
+	stream = _fileProvider.openFileForReading(getFileNameForKey(key));
+	if (stream != null) {
+	    result.addAll(readMemosFromStream(stream));
+	    _fileProvider.closeFile(stream);
 	}
+	return result;
+    }
+
+    private List<_Memo> readMemosFromStream(InputStream stream) {
+	LinkedList<_Memo> result = new LinkedList<_Memo>();
+	new ReadRunner(stream).fill(result);
 	return result;
     }
 

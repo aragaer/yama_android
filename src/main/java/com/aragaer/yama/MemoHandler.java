@@ -1,5 +1,6 @@
 package com.aragaer.yama;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -64,25 +65,20 @@ public class MemoHandler<Key> {
 	    if (list.isEmpty())
 		readerWriter.dropKey(key);
 	    else
-		readerWriter.writeMemosForKey(key, list);
+		readerWriter.writeMemosForKey(key, new ArrayList<Memo>(list));
 	}
     }
 
-    private class _Memo implements Memo {
+    private class _Memo extends Memo {
 	private Key key;
-	private String text;
 
 	_Memo(String text, Key key) {
-	    this.text = text;
+	    super(text);
 	    this.key = key;
 	}
 
 	Key getKey() {
 	    return key;
-	}
-
-	@Override public String getText() {
-	    return text;
 	}
     }
 }

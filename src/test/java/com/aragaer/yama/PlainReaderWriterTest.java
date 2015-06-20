@@ -43,7 +43,7 @@ public class PlainReaderWriterTest {
     }
 
     @Test public void writeMemoFile() {
-	List<TestMemo> memos = Arrays.asList(new TestMemo("memo"), new TestMemo("other"));
+	List<Memo> memos = Arrays.asList(new Memo("memo"), new Memo("other"));
 	readerWriter.writeMemosForKey("memo", memos);
 	String data = fileProvider.files.get("memo");
 	assertThat(data, equalTo("memo\nother\n"));

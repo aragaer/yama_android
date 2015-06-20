@@ -1,6 +1,14 @@
 package com.aragaer.yama;
 
 
-public interface Memo {
-    public String getText();
+public class Memo {
+    private final String text;
+
+    public Memo(String text) {
+	this.text = text;
+    }
+
+    public String getText() {
+	return text;
+    }
 }

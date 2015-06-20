@@ -30,19 +30,19 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 	return key+FILE_SUFFIX;
     }
 
-    @Override public void writeMemosForKey(String key, List<? extends Memo> memos) {
+    @Override public void writeMemosForKey(String key, List<Memo> memos) {
 	OutputStream stream = _fileProvider.openFileForWriting(getFileNameForKey(key));
 	writeMemosToStream(stream, memos);
 	_fileProvider.closeFile(stream);
     }
 
-    private void writeMemosToStream(OutputStream stream, List<? extends Memo> memos) {
+    private void writeMemosToStream(OutputStream stream, List<Memo> memos) {
 	new WriteRunner(stream).writeAll(memos);
     }
 
-    @Override public List<? extends Memo> readMemosForKey(String key) {
+    @Override public List<Memo> readMemosForKey(String key) {
 	InputStream stream;
-	LinkedList<_Memo> result = new LinkedList<_Memo>();
+	LinkedList<Memo> result = new LinkedList<Memo>();
 	stream = _fileProvider.openFileForReading(getFileNameForKey(key));
 	if (stream != null) {
 	    result.addAll(readMemosFromStream(stream));
@@ -51,8 +51,8 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 	return result;
     }
 
-    private List<_Memo> readMemosFromStream(InputStream stream) {
-	LinkedList<_Memo> result = new LinkedList<_Memo>();
+    private List<Memo> readMemosFromStream(InputStream stream) {
+	LinkedList<Memo> result = new LinkedList<Memo>();
 	new ReadRunner(stream).fill(result);
 	return result;
     }
@@ -64,20 +64,11 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
     @Override public void dropKey(String key) {
     }
 
-    private static class _Memo implements Memo {
-
-	private final String _text;
-
-	_Memo(List<String> lines) {
-	    StringBuilder builder = new StringBuilder();
-	    for (String line : lines)
-		builder.append(line).append('\n');
-	    _text = builder.substring(0, builder.length() - 1);
-	}
-
-	@Override public String getText() {
-	    return _text;
-	}
+    private static String join(List<String> lines) {
+	StringBuilder builder = new StringBuilder();
+	for (String line : lines)
+	    builder.append(line).append('\n');
+	return builder.substring(0, builder.length() - 1);
     }
 
     private static class WriteRunner {
@@ -88,7 +79,7 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 	    this.stream = stream;
 	}
 
-	void writeAll(List<? extends Memo> memos) {
+	void writeAll(List<Memo> memos) {
 	    try {
 		for (Memo memo : memos)
 		    write(memo);
@@ -114,16 +105,16 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 	    reader = new BufferedReader(new InputStreamReader(stream));
 	}
 
-	public void fill(List<_Memo> list) {
+	public void fill(List<Memo> list) {
 	    while (true) {
-		_Memo memo = read();
+		Memo memo = read();
 		if (memo == null)
 		    break;
 		list.add(memo);
 	    }
 	}
 
-	private _Memo read() {
+	private Memo read() {
 	    try {
 		reader.readLine();
 	    } catch (IOException e) {
@@ -136,7 +127,7 @@ public class OrgmodeReaderWriter implements MemoReaderWriter<String> {
 		} catch (IOException e) {
 		    break;
 		}
-	    return lines.isEmpty() ? null : new _Memo(lines);
+	    return lines.isEmpty() ? null : new Memo(join(lines));
 	}
 
 	private boolean memoEnded() {

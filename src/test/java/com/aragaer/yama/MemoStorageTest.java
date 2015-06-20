@@ -48,14 +48,14 @@ public class MemoStorageTest {
     @Test public void writesOrgmodeFile() {
 	storage = new MemoStorage(fileProvider);
 
-	storage.writeMemos(Arrays.asList(new TestMemo("some memo")));
+	storage.writeMemos(Arrays.asList(new Memo("some memo")));
 
 	assertThat(fileProvider.fileList().size(), equalTo(1));
 	assertThat(fileProvider.fileList().get(0), equalTo("memo.org"));
 	assertThat(fileProvider.files.get("memo.org"),
 		   equalTo("* \n  some memo\n"));
 
-	storage.writeMemos(Arrays.asList(new TestMemo("edited memo")));
+	storage.writeMemos(Arrays.asList(new Memo("edited memo")));
 
 	assertThat(fileProvider.fileList().size(), equalTo(1));
 	assertThat(fileProvider.fileList().get(0), equalTo("memo.org"));

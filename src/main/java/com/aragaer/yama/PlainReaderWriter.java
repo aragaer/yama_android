@@ -30,7 +30,7 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
 	return KEY_SET;
     }
 
-    @Override public void writeMemosForKey(String key, List<? extends Memo> memos) {
+    @Override public void writeMemosForKey(String key, List<Memo> memos) {
 	OutputStream stream = fileProvider.openFileForWriting("memo");
 	try {
 	    for (Memo memo : memos) {
@@ -43,9 +43,9 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
 	fileProvider.closeFile(stream);
     }
 
-    @Override public List<? extends Memo> readMemosForKey(String key) {
+    @Override public List<Memo> readMemosForKey(String key) {
 	InputStream stream = fileProvider.openFileForReading("memo");
-	List<_Memo> result = new LinkedList<_Memo>();
+	List<Memo> result = new LinkedList<Memo>();
 	if (stream == null)
 	    return result;
 	BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -54,7 +54,7 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
 		String line = reader.readLine();
 		if (line == null)
 		    break;
-		result.add(new _Memo(line));
+		result.add(new Memo(line));
 	    }
 	} catch (Exception e) {
 	    // oops?
@@ -68,18 +68,5 @@ public class PlainReaderWriter implements MemoReaderWriter<String> {
     }
 
     @Override public void dropKey(String key) {
-    }
-
-    private static class _Memo implements Memo {
-
-	private String text;
-
-	_Memo(String text) {
-	    this.text = text;
-	}
-
-	@Override public String getText() {
-	    return text;
-	}
     }
 }

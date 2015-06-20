@@ -63,8 +63,8 @@ public class MemoHandlerTest {
     }
 
     @Test public void useReaderWriter() {
-	List<TestMemo> test_memos = new LinkedList<TestMemo>();
-	test_memos.add(new TestMemo("a memo"));
+	List<Memo> test_memos = new LinkedList<Memo>();
+	test_memos.add(new Memo("a memo"));
 	readerWriter.writeMemosForKey(0, test_memos);
 
 	storage.updateFromReaderWriter();
@@ -88,21 +88,21 @@ public class MemoHandlerTest {
     }
 
     private static class TestReaderWriter implements MemoReaderWriter<Integer> {
-	public TreeMap<Integer, List<? extends Memo>> memos;
+	public TreeMap<Integer, List<Memo>> memos;
 
 	public TestReaderWriter() {
-	    memos = new TreeMap<Integer, List<? extends Memo>>();
+	    memos = new TreeMap<Integer, List<Memo>>();
 	}
 
 	public SortedSet<Integer> getKeys() {
 	    return ((NavigableMap<Integer, ?>) memos).navigableKeySet();
 	}
 
-	public List<? extends Memo> readMemosForKey(Integer key) {
+	public List<Memo> readMemosForKey(Integer key) {
 	    return memos.get(key);
 	}
 
-	public void writeMemosForKey(Integer key, List<? extends Memo> memos) {
+	public void writeMemosForKey(Integer key, List<Memo> memos) {
 	    this.memos.put(key, memos);
 	}
 

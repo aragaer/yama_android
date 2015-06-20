@@ -42,7 +42,7 @@ public class OrgmodeReaderWriterTest {
     }
 
     @Test public void writeMemoFile() {
-	List<TestMemo> memos = Arrays.asList(new TestMemo("memo"), new TestMemo("other\nmulti"));
+	List<Memo> memos = Arrays.asList(new Memo("memo"), new Memo("other\nmulti"));
 	readerWriter.writeMemosForKey("memo", memos);
 	String data = fileProvider.files.get("memo.org");
 	assertThat(data, equalTo("* \n  memo\n* \n  other\n  multi\n"));

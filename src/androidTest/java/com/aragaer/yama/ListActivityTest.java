@@ -49,7 +49,7 @@ public class ListActivityTest {
 
     private List<String> readMemosFile() throws Exception {
 	List<String> result = new LinkedList<String>();
-	InputStream file = mActivityRule.getActivity().openFileInput("memo");
+	InputStream file = mActivityRule.getActivity().openFileInput("memo.org");
 	BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 	while (true) {
 	    String line = reader.readLine();
@@ -74,6 +74,7 @@ public class ListActivityTest {
 
     @After public void tearDown() {
 	mActivityRule.getActivity().deleteFile("memo");
+	mActivityRule.getActivity().deleteFile("memo.org");
     }
 
     @Test public void shouldDisplayMemos() {
@@ -84,13 +85,13 @@ public class ListActivityTest {
 	onView(withId(R.id.new_memo_btn)).perform(click());
 	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
 	onView(withId(R.id.new_memo_edit))
-	    .perform(typeText("\n"
-			      +"  Have a cup of Espresso.  \n"
-			      +"\n"
-			      +"  \n"
-			      +"\n"
-			      +"Write a second test.  \n"
-			      +"\n"));
+	    .perform(replaceText("\n"
+				 +"  Have a cup of Espresso.  \n"
+				 +"\n"
+				 +"  \n"
+				 +"\n"
+				 +"Write a second test.  \n"
+				 +"\n"));
 	android.support.test.espresso.Espresso.closeSoftKeyboard();
 	android.support.test.espresso.Espresso.pressBack();
 
@@ -101,10 +102,10 @@ public class ListActivityTest {
 		   "Write a second test.");
 
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Some initial memo",
-					 "Two of them",
-					 "Have a cup of Espresso.",
-					 "Write a second test.")));
+		   equalTo(Arrays.asList("* ", "  Some initial memo",
+					 "* ", "  Two of them",
+					 "* ", "  Have a cup of Espresso.",
+					 "* ", "  Write a second test.")));
     }
 
     @Test public void discardsNewMemoIfCancelled() throws Exception {
@@ -116,8 +117,8 @@ public class ListActivityTest {
 	onView(withText("Cancel")).perform(click());
 
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Some initial memo",
-					 "Two of them")));
+		   equalTo(Arrays.asList("* ", "  Some initial memo",
+					 "* ", "  Two of them")));
     }
 
     @Test public void editMemo() throws Exception {
@@ -133,9 +134,9 @@ public class ListActivityTest {
 	checkOneMemo("This is a new memo.", 0);
 	checkOneMemo("And one more.", 1);
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("This is a new memo.",
-					 "And one more.",
-					 "Two of them")));
+		   equalTo(Arrays.asList("* ", "  This is a new memo.",
+					 "* ", "  And one more.",
+					 "* ", "  Two of them")));
     }
 
     @Test public void cancelEdit() throws Exception {
@@ -148,8 +149,8 @@ public class ListActivityTest {
 	checkOneMemo("Two of them", 1);
 
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Some initial memo",
-					 "Two of them")));
+		   equalTo(Arrays.asList("* ", "  Some initial memo",
+					 "* ", "  Two of them")));
     }
 
     @Test public void backSavesEdit() throws Exception {
@@ -165,9 +166,9 @@ public class ListActivityTest {
 		   "And one more.",
 		   "Two of them");
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("This is a new memo.",
-					 "And one more.",
-					 "Two of them")));
+		   equalTo(Arrays.asList("* ", "  This is a new memo.",
+					 "* ", "  And one more.",
+					 "* ", "  Two of them")));
     }
 
     @Test public void eraseMemo() throws Exception {
@@ -181,7 +182,7 @@ public class ListActivityTest {
 	checkMemos("Two of them");
 
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Two of them")));
+		   equalTo(Arrays.asList("* ", "  Two of them")));
     }
 
     @Test public void deleteMemo() throws Exception {
@@ -195,7 +196,7 @@ public class ListActivityTest {
 	    .check(matches(isDisplayed()));
 
 	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("Two of them")));
+		   equalTo(Arrays.asList("* ", "  Two of them")));
     }
 
     @Test public void scrollToEnd() throws Exception {

@@ -1,6 +1,8 @@
 package com.aragaer.yama;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -9,109 +11,55 @@ import static org.junit.Assert.*;
 
 public class MemoStorageTest {
 
-    private MemoStorage<Integer> storage;
-    private TestReaderWriter readerWriter;
+    TestFileProvider fileProvider;
+    MemoStorage storage;
 
     @Before public void setUp() {
-	readerWriter = new TestReaderWriter();
-	storage = new MemoStorage<Integer>(readerWriter);
-	assertThat(storage.getAllActiveMemos().size(), equalTo(0));
+	fileProvider = new TestFileProvider();
     }
 
-    @Test public void addMemo() {
-	Memo memo = storage.storeMemo("a memo");
-	assertThat(memo.getText(), equalTo("a memo"));
+    @Test public void readsPlainFile() {
+	fileProvider.setContents("memo", "a memo\nother memo\n");
+	storage = new MemoStorage(fileProvider);
+	List<? extends Memo> memos = storage.readMemos();
 
-	List<Memo> memos = storage.getAllActiveMemos();
-	assertThat(memos.size(), equalTo(1));
-	assertThat(memos.get(0).getText(), equalTo("a memo"));
-
-	storage.dumpToReaderWriter();
-
-	assertThat(readerWriter.memos.size(), equalTo(1));
-	assertThat(readerWriter.memos.get(1).size(), equalTo(1));
-	assertThat(readerWriter.memos.get(1).get(0).getText(), equalTo("a memo"));
-    }
-
-    @Test public void replaceMemo() {
-	Memo memo = storage.storeMemo("a memo");
-
-	storage.replaceMemo(memo, Arrays.asList("a new memo"));
-
-	List<Memo> memos = storage.getAllActiveMemos();
-	assertThat(memos.size(), equalTo(1));
-	assertThat(memos.get(0).getText(), equalTo("a new memo"));
-
-	storage.dumpToReaderWriter();
-
-	assertThat(readerWriter.memos.size(), equalTo(1));
-	assertThat(readerWriter.memos.get(1).size(), equalTo(1));
-	assertThat(readerWriter.memos.get(1).get(0).getText(), equalTo("a new memo"));
-    }
-
-    @Test public void deleteMemo() {
-	Memo memo = storage.storeMemo("a memo");
-
-	storage.deleteMemo(memo);
-
-	List<Memo> memos = storage.getAllActiveMemos();
-	assertThat(memos.size(), equalTo(0));
-
-	storage.dumpToReaderWriter();
-
-	assertThat(readerWriter.memos.size(), equalTo(0));
-    }
-
-    @Test public void useReaderWriter() {
-	List<TestMemo> test_memos = new LinkedList<TestMemo>();
-	test_memos.add(new TestMemo("a memo"));
-	readerWriter.writeMemosForKey(0, test_memos);
-
-	storage.updateFromReaderWriter();
-
-	List<Memo> memos = storage.getAllActiveMemos();
-	assertThat(memos.size(), equalTo(1));
-	assertThat(memos.get(0).getText(), equalTo("a memo"));
-
-	storage.storeMemo("new memo");
-
-	memos = storage.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(2));
-	assertThat(memos.get(0).getText(), equalTo("a memo"));
-	assertThat(memos.get(1).getText(), equalTo("new memo"));
-
-	storage.dumpToReaderWriter();
-
-	assertThat(readerWriter.memos.size(), equalTo(2));
-	assertThat(readerWriter.memos.get(0).size(), equalTo(1));
-	assertThat(readerWriter.memos.get(1).size(), equalTo(1));
     }
 
-    private static class TestReaderWriter implements MemoReaderWriter<Integer> {
-	public TreeMap<Integer, List<? extends Memo>> memos;
+    @Test public void readsOrgmodeFile() {
+	fileProvider.setContents("memo.org", "* \n  a memo\n");
+	storage = new MemoStorage(fileProvider);
+	List<? extends Memo> memos = storage.readMemos();
 
-	public TestReaderWriter() {
-	    memos = new TreeMap<Integer, List<? extends Memo>>();
-	}
+	assertThat(memos.size(), equalTo(1));
+    }
 
-	public SortedSet<Integer> getKeys() {
-	    return ((NavigableMap<Integer, ?>) memos).navigableKeySet();
-	}
+    @Test public void convertsPlainToOrgmode() {
+	fileProvider.setContents("memo", "a memo\nother memo\n");
+	storage = new MemoStorage(fileProvider);
+	List<? extends Memo> memos = storage.readMemos();
 
-	public List<? extends Memo> readMemosForKey(Integer key) {
-	    return memos.get(key);
-	}
+	assertThat(fileProvider.fileList().size(), equalTo(1));
+	assertThat(fileProvider.fileList().get(0), equalTo("memo.org"));
+	assertThat(fileProvider.files.get("memo.org"),
+		   equalTo("* \n  a memo\n* \n  other memo\n"));
+    }
 
-	public void writeMemosForKey(Integer key, List<? extends Memo> memos) {
-	    this.memos.put(key, memos);
-	}
+    @Test public void writesOrgmodeFile() {
+	storage = new MemoStorage(fileProvider);
 
-	public Integer getDefaultKey() {
-	    return 1;
-	}
+	storage.writeMemos(Arrays.asList(new Memo("some memo")));
 
-	public void dropKey(Integer key) {
-	    this.memos.remove(key);
-	}
+	assertThat(fileProvider.fileList().size(), equalTo(1));
+	assertThat(fileProvider.fileList().get(0), equalTo("memo.org"));
+	assertThat(fileProvider.files.get("memo.org"),
+		   equalTo("* \n  some memo\n"));
+
+	storage.writeMemos(Arrays.asList(new Memo("edited memo")));
+
+	assertThat(fileProvider.fileList().size(), equalTo(1));
+	assertThat(fileProvider.fileList().get(0), equalTo("memo.org"));
+	assertThat(fileProvider.files.get("memo.org"),
+		   equalTo("* \n  edited memo\n"));
     }
 }

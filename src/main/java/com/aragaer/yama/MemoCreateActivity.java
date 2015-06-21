@@ -54,10 +54,10 @@ public class MemoCreateActivity extends Activity {
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
 	MemoStorage storage = new MemoStorage(fileProvider);
 	MemoHandler handler = new MemoHandler(storage);
-	handler.updateFromReaderWriter();
+	handler.updateFromStorage();
 	for (String line : lines)
 	    handler.storeMemo(line);
-	handler.dumpToReaderWriter();
+	handler.dumpToStorage();
 	Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
     }
 

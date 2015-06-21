@@ -40,7 +40,7 @@ public class MemoListActivity extends Activity {
     }
 
     protected void onResume() {
-	memoKeeper.updateFromReaderWriter();
+	memoKeeper.updateFromStorage();
 	updateFromKeeper();
 	super.onResume();
     }
@@ -68,7 +68,7 @@ public class MemoListActivity extends Activity {
     private void applyEdit(List<String> result) {
 	List<? extends Memo> list = memoKeeper.getAllActiveMemos();
 	memoKeeper.replaceMemo(list.get(editPosition), result);
-	memoKeeper.dumpToReaderWriter();
+	memoKeeper.dumpToStorage();
 	updateFromKeeper();
 	listFragment.scrollTo = editPosition + result.size() - 1;
 	Toast.makeText(this,

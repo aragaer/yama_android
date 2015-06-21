@@ -26,7 +26,7 @@ public class MemoHandlerTest {
 	assertThat(memos.size(), equalTo(1));
 	assertThat(memos.get(0).getText(), equalTo("a memo"));
 
-	handler.dumpToReaderWriter();
+	handler.dumpToStorage();
 
 	assertThat(storage.memos.size(), equalTo(1));
 	assertThat(storage.memos.get(0).getText(), equalTo("a memo"));
@@ -41,7 +41,7 @@ public class MemoHandlerTest {
 	assertThat(memos.size(), equalTo(1));
 	assertThat(memos.get(0).getText(), equalTo("a new memo"));
 
-	handler.dumpToReaderWriter();
+	handler.dumpToStorage();
 
 	assertThat(storage.memos.size(), equalTo(1));
 	assertThat(storage.memos.get(0).getText(), equalTo("a new memo"));
@@ -55,7 +55,7 @@ public class MemoHandlerTest {
 	List<Memo> memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(0));
 
-	handler.dumpToReaderWriter();
+	handler.dumpToStorage();
 
 	assertThat(storage.memos.size(), equalTo(0));
     }
@@ -65,7 +65,7 @@ public class MemoHandlerTest {
 	test_memos.add(new Memo("a memo"));
 	storage.writeMemos(test_memos);
 
-	handler.updateFromReaderWriter();
+	handler.updateFromStorage();
 
 	List<Memo> memos = handler.getAllActiveMemos();
 	assertThat(memos.size(), equalTo(1));
@@ -78,7 +78,7 @@ public class MemoHandlerTest {
 	assertThat(memos.get(0).getText(), equalTo("a memo"));
 	assertThat(memos.get(1).getText(), equalTo("new memo"));
 
-	handler.dumpToReaderWriter();
+	handler.dumpToStorage();
 
 	assertThat(storage.memos.size(), equalTo(2));
     }

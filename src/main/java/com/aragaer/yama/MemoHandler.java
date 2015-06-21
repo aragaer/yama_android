@@ -39,11 +39,11 @@ public class MemoHandler {
 	memos.remove(memo);
     }
 
-    public void updateFromReaderWriter() {
+    public void updateFromStorage() {
 	memos = _storage.readMemos();
     }
 
-    public void dumpToReaderWriter() {
+    public void dumpToStorage() {
 	_storage.writeMemos(memos);
     }
 }

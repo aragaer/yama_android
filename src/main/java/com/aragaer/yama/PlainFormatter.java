@@ -1,15 +1,15 @@
 package com.aragaer.yama;
 
-import java.lang.StringBuilder;
 import java.util.List;
 
 
 public class PlainFormatter implements MemoFormatter {
-    public static final String FILE_SUFFIX = "";
+    @Override public String getFileSuffix() {
+	return "";
+    }
 
     @Override public void formatAllTo(List<Memo> memos, StringBuilder out) {
-	for (Memo memo : memos)
-	    out.append(memo.getText()).append('\n');
+	throw new UnsupportedOperationException("Never write plain format memos again");
     }
 
     @Override public void parseAllTo(List<Memo> memos, String contents) {
@@ -17,5 +17,4 @@ public class PlainFormatter implements MemoFormatter {
 	    if (!line.isEmpty())
 		memos.add(new Memo(line));
     }
-
 }

@@ -1,11 +1,12 @@
 package com.aragaer.yama;
 
-import java.lang.StringBuilder;
 import java.util.List;
 
 
 public class OrgmodeFormatter implements MemoFormatter {
-    public static final String FILE_SUFFIX = ".org";
+    @Override public String getFileSuffix() {
+	return ".org";
+    }
 
     @Override public void formatAllTo(List<Memo> memos, StringBuilder out) {
 	new Formatter(out).formatAll(memos);

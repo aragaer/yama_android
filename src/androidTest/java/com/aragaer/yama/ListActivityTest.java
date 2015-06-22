@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import android.content.Context;
-import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.DataInteraction;
 import android.support.test.filters.FlakyTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -121,13 +121,30 @@ public class ListActivityTest {
 					 "* ", "  Two of them")));
     }
 
-    @Test @Ignore public void editMemo() throws Exception {
-	clickFirstItem();
-	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
-	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
-	onView(withId(R.id.memo_edit))
+    @Test public void editMemo() throws Exception {
+	onFirstItemEditText().perform(click());
+	onFirstItemEditText().check(matches(isDisplayed()));
+	onFirstItemEditText().check(matches(withText("Some initial memo")));
+	onFirstItemEditText()
+	    .perform(replaceText("Edited now"));
+	android.support.test.espresso.Espresso.closeSoftKeyboard();
+
+	checkToast("Saved");
+
+	checkMemos("Edited now", "Two of them");
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("* ", "  Edited now",
+					 "* ", "  Two of them")));
+    }
+
+    @Test @Ignore public void editMemoMultiline() throws Exception {
+	onFirstItemEditText().perform(click());
+	onFirstItemEditText().check(matches(isDisplayed()));
+	onFirstItemEditText().check(matches(withText("Some initial memo")));
+	// FIXME: should not work like this
+	// typeText will be needed to invoke the new memo insertion
+	onFirstItemEditText()
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
-	onView(withText("Done")).perform(click());
 
 	checkToast("Saved");
 
@@ -140,7 +157,7 @@ public class ListActivityTest {
     }
 
     @Test @Ignore public void cancelEdit() throws Exception {
-	clickFirstItem();
+	onFirstItemEditText();
 	onView(withId(R.id.memo_edit)).check(matches(isDisplayed()));
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
@@ -154,7 +171,7 @@ public class ListActivityTest {
     }
 
     @Test @Ignore public void backSavesEdit() throws Exception {
-	clickFirstItem();
+	onFirstItemEditText();
 	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
@@ -172,7 +189,7 @@ public class ListActivityTest {
     }
 
     @Test @Ignore public void eraseMemo() throws Exception {
-	clickFirstItem();
+	onFirstItemEditText();
 	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withId(R.id.memo_edit))
 	    .perform(replaceText("\n \n\n   \n\n"));
@@ -186,7 +203,7 @@ public class ListActivityTest {
     }
 
     @Test @Ignore public void deleteMemo() throws Exception {
-	clickFirstItem();
+	onFirstItemEditText();
 	onView(withId(R.id.memo_edit)).check(matches(withText("Some initial memo")));
 	onView(withText("Delete")).perform(click());
 	checkOneMemo("Two of them", 0);
@@ -263,21 +280,22 @@ public class ListActivityTest {
 	onView(isRoot()).perform(orientationPortrait());
 
 	// verify there's only one button - will fail with multiple buttons
-	onView(withId(R.id.new_memo_btn)).perform(click());
+	onView(withId(R.id.new_memo_btn)).check(matches(isDisplayed()));
     }
-    
-    private void clickFirstItem() {
-	onData(anything())
+
+    private DataInteraction onEditText(int position) {
+	return onData(anything())
 	    .inAdapterView(withId(R.id.memo_list))
-	    .atPosition(0)
-	    .perform(click());
+	    .atPosition(position)
+	    .onChildView(withId(R.id.text));
+    }
+
+    private DataInteraction onFirstItemEditText() {
+	return onEditText(0);
     }
 
     private void checkOneMemo(String text, int position) {
-	onData(anything())
-	    .inAdapterView(withId(R.id.memo_list))
-	    .atPosition(position)
-	    .onChildView(withId(R.id.text))
+	onEditText(position)
 	    .check(matches(withText(text)));
     }
 

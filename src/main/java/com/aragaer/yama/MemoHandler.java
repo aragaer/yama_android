@@ -27,11 +27,13 @@ public class MemoHandler {
     }
 
     public void replaceMemo(Memo memo, List<String> lines) {
-	int dayIndex = memos.indexOf(memo);
-	memos.remove(dayIndex);
+	int index = memos.indexOf(memo);
+	if (index == -1)
+	    throw new IllegalArgumentException("Memo " + memo.toString() + " not found in list");
+	memos.remove(index);
 	for (int i = 0; i < lines.size(); i++) {
 	    Memo newMemo = new Memo(lines.get(i));
-	    memos.add(dayIndex+i, newMemo);
+	    memos.add(index+i, newMemo);
 	}
     }
 

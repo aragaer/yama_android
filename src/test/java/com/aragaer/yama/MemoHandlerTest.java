@@ -33,7 +33,8 @@ public class MemoHandlerTest {
     }
 
     @Test public void replaceMemo() {
-	Memo memo = handler.storeMemo("a memo");
+	handler.storeMemo("a memo");
+	Memo memo = handler.getAllActiveMemos().get(0);
 
 	handler.replaceMemo(memo, Arrays.asList("a new memo"));
 

@@ -127,33 +127,16 @@ public class ListActivityTest {
 	onFirstItemEditText().perform(replaceText("Edited now"));
 	onEditText(1).perform(click());
 
-	mActivityRule.getActivity().finish();
-	mActivityRule.launchActivity(null);
-
-	checkMemos("Edited now", "Two of them");
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("* ", "  Edited now",
 					 "* ", "  Two of them")));
-    }
-
-    @Test public void editMemoAndCloseKeyboard() throws Exception {
-	onFirstItemEditText().check(matches(withText("Some initial memo")));
-	onFirstItemEditText().perform(click());
-	onFirstItemEditText().perform(replaceText("Edited now"));
-	// This actually closes the keyboard
-	// Currently I cannot catch the "close keyboard" event
-	android.support.test.espresso.Espresso.pressBack();
 
 	mActivityRule.getActivity().finish();
 	mActivityRule.launchActivity(null);
-
 	checkMemos("Edited now", "Two of them");
-	assertThat(readMemosFile(),
-		   equalTo(Arrays.asList("* ", "  Edited now",
-					 "* ", "  Two of them")));
     }
 
-    @Test @Ignore public void editMemoMultiline() throws Exception {
+    @Test @Ignore public void editInsertNewMemo() throws Exception {
 	onFirstItemEditText().perform(click());
 	onFirstItemEditText().check(matches(isDisplayed()));
 	onFirstItemEditText().check(matches(withText("Some initial memo")));
@@ -170,22 +153,19 @@ public class ListActivityTest {
 					 "* ", "  Two of them")));
     }
 
-    @Test @Ignore public void backSavesEdit() throws Exception {
+    @Test public void pauseSavesEdit() throws Exception {
 	onFirstItemEditText();
-	onView(withId(R.id.text)).check(matches(withText("Some initial memo")));
-	onView(withId(R.id.text))
-	    .perform(replaceText("\n This is a new memo.\n\n  \nAnd one more."));
+	onFirstItemEditText().check(matches(withText("Some initial memo")));
+	onFirstItemEditText().perform(replaceText("This is a new memo."));
 
-	android.support.test.espresso.Espresso.closeSoftKeyboard();
-	android.support.test.espresso.Espresso.pressBack();
-
-	checkMemos("This is a new memo.",
-		   "And one more.",
-		   "Two of them");
+	mActivityRule.getActivity().finish();
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("* ", "  This is a new memo.",
-					 "* ", "  And one more.",
 					 "* ", "  Two of them")));
+
+	mActivityRule.launchActivity(null);
+	checkMemos("This is a new memo.",
+		   "Two of them");
     }
 
     @Test @Ignore public void eraseMemo() throws Exception {

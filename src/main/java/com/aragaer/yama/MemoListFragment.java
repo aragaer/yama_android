@@ -28,6 +28,7 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
     ListView memoListView;
     ArrayAdapter<Memo> memoAdapter;
     List<Memo> memoList;
+    ViewHolder edited;
 
     public MemoListFragment() {
 	memoList = Collections.synchronizedList(new ArrayList<Memo>());
@@ -41,13 +42,20 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
     @Override public void onFocusChange(View v, boolean hasFocus) {
 	ViewHolder holder = (ViewHolder) ((ViewGroup) v.getParent()).getTag();
 	if (hasFocus)
+	    edited = holder;
+	else
+	    applyEdit();
+    }
+
+    private void applyEdit() {
+	if (edited == null)
 	    return;
-	Memo oldMemo = memoAdapter.getItem(holder.position);
+	Memo oldMemo = memoAdapter.getItem(edited.position);
 	String oldText = oldMemo.getText().trim();
-	String newText = holder.input.getText().toString();
-	if (oldText.equals(newText))
-	    return;
-	((MemoListActivity) getActivity()).applyEdit(oldMemo, newText);
+	String newText = edited.input.getText().toString();
+	if (!oldText.equals(newText))
+	    ((MemoListActivity) getActivity()).applyEdit(oldMemo, newText);
+	edited = null;
     }
 
     @Override public View onCreateView(LayoutInflater inflater,
@@ -101,5 +109,10 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 	inflater.inflate(R.menu.list_menu, menu);
+    }
+
+    @Override public void onPause() {
+	applyEdit();
+	super.onPause();
     }
 }

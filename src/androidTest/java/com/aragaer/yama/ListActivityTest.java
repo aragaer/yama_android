@@ -122,14 +122,27 @@ public class ListActivityTest {
     }
 
     @Test public void editMemo() throws Exception {
-	onFirstItemEditText().perform(click());
-	onFirstItemEditText().check(matches(isDisplayed()));
 	onFirstItemEditText().check(matches(withText("Some initial memo")));
-	onFirstItemEditText()
-	    .perform(replaceText("Edited now"));
-	// TODO: need a test for closing keyboard as well
-	// android.support.test.espresso.Espresso.closeSoftKeyboard();
+	onFirstItemEditText().perform(click());
+	onFirstItemEditText().perform(replaceText("Edited now"));
 	onEditText(1).perform(click());
+
+	mActivityRule.getActivity().finish();
+	mActivityRule.launchActivity(null);
+
+	checkMemos("Edited now", "Two of them");
+	assertThat(readMemosFile(),
+		   equalTo(Arrays.asList("* ", "  Edited now",
+					 "* ", "  Two of them")));
+    }
+
+    @Test public void editMemoAndCloseKeyboard() throws Exception {
+	onFirstItemEditText().check(matches(withText("Some initial memo")));
+	onFirstItemEditText().perform(click());
+	onFirstItemEditText().perform(replaceText("Edited now"));
+	// This actually closes the keyboard
+	// Currently I cannot catch the "close keyboard" event
+	android.support.test.espresso.Espresso.pressBack();
 
 	mActivityRule.getActivity().finish();
 	mActivityRule.launchActivity(null);

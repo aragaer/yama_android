@@ -28,7 +28,6 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
     ListView memoListView;
     ArrayAdapter<Memo> memoAdapter;
     List<Memo> memoList;
-    int scrollTo = -1;
 
     public MemoListFragment() {
 	memoList = Collections.synchronizedList(new ArrayList<Memo>());
@@ -40,9 +39,9 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
     }
 
     @Override public void onFocusChange(View v, boolean hasFocus) {
+	ViewHolder holder = (ViewHolder) ((ViewGroup) v.getParent()).getTag();
 	if (hasFocus)
 	    return;
-	ViewHolder holder = (ViewHolder) ((ViewGroup) v.getParent()).getTag();
 	Memo oldMemo = memoAdapter.getItem(holder.position);
 	String oldText = oldMemo.getText().trim();
 	String newText = holder.input.getText().toString();

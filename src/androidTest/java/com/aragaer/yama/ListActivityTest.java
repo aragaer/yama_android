@@ -154,8 +154,8 @@ public class ListActivityTest {
     }
 
     @Test public void pauseSavesEdit() throws Exception {
-	onFirstItemEditText();
 	onFirstItemEditText().check(matches(withText("Some initial memo")));
+	onFirstItemEditText().perform(click());
 	onFirstItemEditText().perform(replaceText("This is a new memo."));
 
 	mActivityRule.getActivity().finish();
@@ -168,13 +168,13 @@ public class ListActivityTest {
 		   "Two of them");
     }
 
-    @Test @Ignore public void eraseMemo() throws Exception {
-	onFirstItemEditText().perform(click());
-	onFirstItemEditText().check(matches(isDisplayed()));
+    @Test public void eraseMemo() throws Exception {
 	onFirstItemEditText().check(matches(withText("Some initial memo")));
-	onFirstItemEditText()
-	    .perform(replaceText(""));
-	onEditText(1).perform(click());
+	onFirstItemEditText().perform(click());
+	onFirstItemEditText().perform(replaceText("  \n\n \n "));
+
+	mActivityRule.getActivity().finish();
+	mActivityRule.launchActivity(null);
 
 	checkMemos("Two of them");
 

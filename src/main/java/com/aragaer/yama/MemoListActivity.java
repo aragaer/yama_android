@@ -1,6 +1,5 @@
 package com.aragaer.yama;
 
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -12,17 +11,14 @@ import android.view.MenuItem;
 
 public class MemoListActivity extends Activity {
 
-    private List<Memo> memoList;
     private MemoListFragment listFragment;
-    private MemoStorage storage;
     private MemoHandler memoKeeper;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
-	storage = new MemoStorage(fileProvider);
-	memoKeeper = new MemoHandler(storage);
+	memoKeeper = new MemoHandler(new MemoStorage(fileProvider));
 
 	listFragment = (MemoListFragment) getFragmentManager().findFragmentById(android.R.id.content);
 	if (listFragment == null) {
@@ -32,7 +28,6 @@ public class MemoListActivity extends Activity {
 		.add(android.R.id.content, listFragment)
 		.commit();
 	}
-	memoList = listFragment.getList();
     }
 
     protected void onResume() {
@@ -42,17 +37,11 @@ public class MemoListActivity extends Activity {
     }
 
     private void updateFromKeeper() {
-	memoList.clear();
-	List<Memo> memos = memoKeeper.getAllActiveMemos();
-	memoList.addAll(memos);
+	listFragment.setContents(memoKeeper.getAllActiveMemos());
     }
 
-    public MemoHandler getMemoHandler() {
-	return memoKeeper;
-    }
-
-    public void applyEdit(Memo editedMemo, String result) {
-	memoKeeper.replaceMemo(editedMemo, Arrays.asList(result));
+    public void applyEdit(Memo editedMemo, String newText) {
+	memoKeeper.replaceMemo(editedMemo, MemoProcessor.sanitize(newText));
 	memoKeeper.dumpToStorage();
 	updateFromKeeper();
     }

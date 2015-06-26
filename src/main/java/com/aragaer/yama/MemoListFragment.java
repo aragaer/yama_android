@@ -1,6 +1,7 @@
 package com.aragaer.yama;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -17,22 +18,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.EditText;
 
+import com.aragaer.yama.ui.EditableItem;
+
 
 public class MemoListFragment extends Fragment implements OnFocusChangeListener {
 
     ListView memoListView;
     ArrayAdapter<Memo> memoAdapter;
-    List<Memo> memoList;
-    ViewHolder edited;
+    Collection<Memo> memoList;
+    EditableItem edited;
 
     public MemoListFragment() {
 	setHasOptionsMenu(true);
     }
 
     @Override public void onFocusChange(View v, boolean hasFocus) {
-	ViewHolder holder = (ViewHolder) ((ViewGroup) v.getParent()).getTag();
+	EditableItem item = EditableItem.getFromInput(v);
 	if (hasFocus)
-	    edited = holder;
+	    edited = item;
 	else
 	    applyEdit();
     }
@@ -40,20 +43,20 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
     private void applyEdit() {
 	if (edited == null)
 	    return;
-	if (!memoList.contains(edited.memo)) {
+	if (!memoList.contains(edited.getMemo())) {
 	    edited = null;
 	    return;
 	}
-	String oldText = edited.memo.getText();
-	String newText = edited.input.getText().toString();
+	String oldText = edited.getMemo().getText();
+	String newText = edited.getText();
 	if (!oldText.equals(newText))
-	    ((MemoListActivity) getActivity()).applyEdit(edited.memo, newText);
+	    ((MemoListActivity) getActivity()).applyEdit(edited.getMemo(), newText);
 	edited = null;
     }
 
-    void setContents(List<Memo> memos) {
+    void setContents(Collection<Memo> memos) {
 	edited = null;
-	memoList = memos;
+	memoList = new HashSet<Memo>(memos);
 	memoAdapter.clear();
 	memoAdapter.addAll(memos);
     }
@@ -73,39 +76,24 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
 	private final OnFocusChangeListener focusChangeListener;
 
 	MemoAdapter(Context context, OnFocusChangeListener focusChangeListener) {
-	    super(context, R.layout.item);
+	    super(context, 0);
 	    this.focusChangeListener = focusChangeListener;
 	}
 
 	@Override public View getView(int position, View convertView, ViewGroup parent) {
-	    ViewHolder holder;
-	    if (convertView == null) {
-		convertView = View.inflate(parent.getContext(), R.layout.item, null);
-		holder = new ViewHolder();
-		holder.input = (EditText) convertView.findViewById(R.id.text);
-		holder.input.setOnFocusChangeListener(focusChangeListener);
-		convertView.setTag(holder);
-	    } else
-		holder = (ViewHolder) convertView.getTag();
-	    Memo memo = getItem(position);
-	    holder.input.setText(memo.getText());
-	    holder.memo = memo;
-	    return convertView;
+	    EditableItem item;
+	    if (convertView == null)
+		item = new EditableItem(parent.getContext(), focusChangeListener);
+	    else
+		item = (EditableItem) convertView;
+	    item.setMemo(getItem(position));
+	    return item;
 	}
-    }
-
-    private static class ViewHolder {
-	EditText input;
-	Memo memo;
-    }
-
-    public void scrollTo(int position) {
-	memoListView.setSelection(position);
     }
 
     @Override public void onResume() {
 	super.onResume();
-	scrollTo(memoList.size() - 1);
+	memoListView.setSelection(memoList.size() - 1);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

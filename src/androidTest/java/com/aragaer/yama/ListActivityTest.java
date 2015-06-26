@@ -159,11 +159,12 @@ public class ListActivityTest {
 	onFirstItemEditText().perform(replaceText("This is a new memo."));
 
 	mActivityRule.getActivity().finish();
+	mActivityRule.launchActivity(null);
+
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("* ", "  This is a new memo.",
 					 "* ", "  Two of them")));
 
-	mActivityRule.launchActivity(null);
 	checkMemos("This is a new memo.",
 		   "Two of them");
     }

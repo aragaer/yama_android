@@ -99,6 +99,5 @@ public class MemoHandlerTest {
 	public void writeMemos(List<Memo> memos) {
 	    this.memos = memos;
 	}
-
     }
 }

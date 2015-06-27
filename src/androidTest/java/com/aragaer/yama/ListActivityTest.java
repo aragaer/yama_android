@@ -10,6 +10,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -181,6 +182,12 @@ public class ListActivityTest {
 
 	assertThat(readMemosFile(),
 		   equalTo(Arrays.asList("* ", "  Two of them")));
+    }
+
+    @Test @Ignore public void joinMemoToNext() {
+	onFirstItemEditText().perform(click(), clearText(), pressKey(KeyEvent.KEYCODE_FORWARD_DEL));
+	onView(allOf(hasFocus(), withId(R.id.text))).check(matches(withText("Two of them")));
+	checkMemos("Two of them");
     }
 
     @Test @Ignore public void deleteMemo() throws Exception {

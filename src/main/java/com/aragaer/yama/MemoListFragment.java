@@ -23,13 +23,18 @@ import com.aragaer.yama.ui.EditableItem;
 
 public class MemoListFragment extends Fragment implements OnFocusChangeListener {
 
-    ListView memoListView;
-    ArrayAdapter<Memo> memoAdapter;
-    Collection<Memo> memoList;
-    EditableItem edited;
+    private MemoHandler handler;
+    private ListView memoListView;
+    private ArrayAdapter<Memo> memoAdapter;
+    private Collection<Memo> memoList;
+    private EditableItem edited;
 
     public MemoListFragment() {
 	setHasOptionsMenu(true);
+    }
+
+    public void setMemoHandler(MemoHandler newHandler) {
+	handler = newHandler;
     }
 
     @Override public void onFocusChange(View v, boolean hasFocus) {
@@ -49,13 +54,16 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
 	}
 	String oldText = edited.getMemo().getText();
 	String newText = edited.getText();
-	if (!oldText.equals(newText))
-	    ((MemoListActivity) getActivity()).applyEdit(edited.getMemo(), newText);
+	if (!oldText.equals(newText)) {
+	    handler.replaceMemo(edited.getMemo(), MemoProcessor.sanitize(newText));
+	    handler.dumpToStorage();
+	    refreshContents();
+	}
 	edited = null;
     }
 
-    void setContents(Collection<Memo> memos) {
-	edited = null;
+    private void refreshContents() {
+	Collection<Memo> memos = handler.getAllActiveMemos();
 	memoList = new HashSet<Memo>(memos);
 	memoAdapter.clear();
 	memoAdapter.addAll(memos);
@@ -66,8 +74,8 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
 				       Bundle savedInstanceState) {
 	View result = inflater.inflate(R.layout.list, root, false);
 
-	memoAdapter = new MemoAdapter(getActivity(), this);
 	memoListView = (ListView) result.findViewById(R.id.memo_list);
+	memoAdapter = new MemoAdapter(memoListView.getContext(), this);
 	memoListView.setAdapter(memoAdapter);
 	return result;
     }
@@ -92,8 +100,13 @@ public class MemoListFragment extends Fragment implements OnFocusChangeListener 
     }
 
     @Override public void onResume() {
+	if (handler != null) {
+	    handler.updateFromStorage();
+	    refreshContents();
+	}
 	super.onResume();
-	memoListView.setSelection(memoList.size() - 1);
+	if (memoList != null)
+	    memoListView.setSelection(memoList.size() - 1);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

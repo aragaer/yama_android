@@ -9,18 +9,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 
 public class MemoCreateActivity extends Activity {
 
-    EditText memo;
-
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.create);
-	memo = (EditText) findViewById(R.id.new_memo_edit);
+	EditorFragment fragment = (EditorFragment) getFragmentManager().findFragmentById(android.R.id.content);
+	if (fragment == null) {
+	    fragment = new EditorFragment();
+	    getFragmentManager()
+		.beginTransaction()
+		.add(android.R.id.content, fragment)
+		.commit();
+	}
     }
 
     private static final int SAVE_BUTTON_ID = 0;
@@ -48,15 +51,16 @@ public class MemoCreateActivity extends Activity {
     }
 
     private void saveMemo() {
-	List<String> lines = MemoProcessor.sanitize(memo.getText().toString().split("\n"));
-	if (lines.isEmpty())
+	EditorFragment fragment = (EditorFragment) getFragmentManager().findFragmentById(android.R.id.content);
+	List<Memo> memos = fragment.getContents();
+	if (memos.isEmpty())
 	    return;
 	MemoFileProvider fileProvider = new AndroidFileProvider(this);
 	MemoStorage storage = new MemoStorage(fileProvider);
 	MemoHandler handler = new MemoHandler(storage);
 	handler.updateFromStorage();
-	for (String line : lines)
-	    handler.storeMemo(line);
+	for (Memo memo : memos)
+	    handler.storeMemo(memo);
 	handler.dumpToStorage();
 	Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
     }

@@ -84,8 +84,8 @@ public class ListActivityTest {
 
     @Test public void canCreateNewMemo() throws Exception {
 	onView(withId(R.id.new_memo_btn)).perform(click());
-	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
-	onView(withId(R.id.new_memo_edit))
+	onView(withId(R.id.editor)).check(matches(isDisplayed()));
+	onView(withId(R.id.editor))
 	    .perform(replaceText("\n"
 				 +"  Have a cup of Espresso.  \n"
 				 +"\n"
@@ -111,8 +111,8 @@ public class ListActivityTest {
 
     @Test public void discardsNewMemoIfCancelled() throws Exception {
 	onView(withId(R.id.new_memo_btn)).perform(click());
-	onView(withId(R.id.new_memo_edit)).check(matches(isDisplayed()));
-	onView(withId(R.id.new_memo_edit))
+	onView(withId(R.id.editor)).check(matches(isDisplayed()));
+	onView(withId(R.id.editor))
 	    .perform(replaceText("  Have a cup of Espresso.  \n"));
 
 	onView(withText("Cancel")).perform(click());
@@ -210,7 +210,7 @@ public class ListActivityTest {
 	    text += "x\n";
 	text += "y";
 	onView(withId(R.id.new_memo_btn)).perform(click());
-	onView(withId(R.id.new_memo_edit))
+	onView(withId(R.id.editor))
 	    .perform(replaceText(text));
 	onView(withText(R.string.action_save)).perform(click());
 
@@ -223,7 +223,7 @@ public class ListActivityTest {
 	    text += "x\n";
 	text += "y";
 	onView(withId(R.id.new_memo_btn)).perform(click());
-	onView(withId(R.id.new_memo_edit))
+	onView(withId(R.id.editor))
 	    .perform(replaceText(text));
 	mActivityRule.getActivity().finish(); // force restart of main activity
 	onView(withText(R.string.action_save)).perform(click());

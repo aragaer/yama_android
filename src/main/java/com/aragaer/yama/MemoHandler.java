@@ -21,9 +21,12 @@ public class MemoHandler {
     }
 
     public Memo storeMemo(String text) {
-	Memo result = new Memo(text);
-	memos.add(result);
-	return result;
+	return storeMemo(new Memo(text));
+    }
+
+    public Memo storeMemo(Memo memo) {
+	memos.add(memo);
+	return memo;
     }
 
     public void replaceMemo(Memo memo, List<String> lines) {

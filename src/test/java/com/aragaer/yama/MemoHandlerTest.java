@@ -84,7 +84,7 @@ public class MemoHandlerTest {
 	assertThat(storage.memos.size(), equalTo(2));
     }
 
-    private static class TestMemoStorage extends MemoStorage {
+    static class TestMemoStorage extends MemoStorage {
 	List<Memo> memos;
 
 	TestMemoStorage() {
